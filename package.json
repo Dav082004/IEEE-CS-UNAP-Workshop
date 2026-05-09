@@ -1,0 +1,38 @@
+{
+  "name": "ieee-cs-unap-workshop",
+  "version": "2.0.0",
+  "description": "Página web colaborativa para aprender Git & GitHub — IEEE Computer Society UNAP Student Branch × GitHub Education",
+  "main": "index.html",
+  "scripts": {
+    "migrate": "node scripts/split-contributors.js",
+    "generate": "node scripts/generate-contributors.js",
+    "validate": "node scripts/generate-contributors.js",
+    "start": "npx live-server --port=8080 --open=/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dav082004/IEEE-CS-UNAP-Workshop.git"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "workshop",
+    "colaborativo",
+    "open-source",
+    "learning",
+    "contributors",
+    "tutorial"
+  ],
+  "author": "David Contreras <dav082004> & Contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dav082004/IEEE-CS-UNAP-Workshop/issues"
+  },
+  "homepage": "https://dav082004.github.io/IEEE-CS-UNAP-Workshop/",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

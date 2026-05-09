@@ -1,0 +1,45 @@
+name: ✅ Validate PR
+
+# Se ejecuta solo en Pull Requests que modifican contributors/
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "contributors/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate contribution
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout del PR
+      - name: 📥 Checkout PR
+        uses: actions/checkout@v4
+
+      # 2. Setup de Node.js
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # 3. Validar archivos JSON
+      - name: ✅ Validate JSON files
+        id: validate
+        run: |
+          echo "Validando archivos de colaboradores..."
+          
+          # Ejecutar el generador (valida automáticamente)
+          if node scripts/generate-contributors.js; then
+            echo "validation=success" >> $GITHUB_OUTPUT
+            echo "✅ Validación exitosa"
+          else
+            echo "validation=failed" >> $GITHUB_OUTPUT
+            echo "❌ Validación fallida"
+            exit 1
+          fi

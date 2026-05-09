@@ -1,0 +1,604 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Repositorio Colaborativo</title>
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/como-contribuir.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <div class="header-title">
+          <h1>IEEE&amp;nbsp;CS&amp;nbsp;UNAP</h1>
+        </div>
+        <nav class="header-nav" id="headerNav">
+          <a href="../index.html" class="nav-link">Inicio</a>
+          <a href="../index.html#participantes" class="nav-link">Miembros</a>
+          <a href="teoria.html" class="nav-link">TeorÃ­a</a>
+          <a href="como-contribuir.html" class="nav-link active"
+            >CÃ³mo Contribuir</a>
+        </nav>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Overlay para menÃº mÃ³vil -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Modal para ampliar imÃ¡genes -->
+    <div id="imageModal" class="image-modal" style="display: none;">
+      <span class="modal-close" id="modalClose">&times;</span>
+      <img class="modal-content" id="modalImage">
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Instrucciones para contribuir -->
+      <section class="contribute-section">
+        <div class="contribute-container">
+          <div class="steps-container">
+            <!-- Paso 1: Acceder al Repositorio -->
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>
+                  <i class="fas fa-globe"></i> Accede y Forkea el Repositorio
+                </h3>
+                <p>
+                  Ve al repositorio oficial en GitHub y familiarÃ­zate con el
+                  proyecto. Revisa el README y la estructura del proyecto. Luego
+                  dale click a Fork y crear un fork del repositorio.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso1.png"
+                    alt="Paso 1: Acceder al repositorio"
+                    class="guide-image" />
+                </div>
+                <div class="code-example">
+                  <pre><code># URL del repositorio
+https://github.com/Dav082004/IEEE-CS-UNAP-Workshop</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 2: Fork del Repositorio -->
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>
+                  <i class="fas fa-code-branch"></i> Haz Fork del Repositorio
+                </h3>
+                <p>
+                  Haz clic en el botÃ³n "Fork" en la esquina superior derecha del
+                  repositorio. Esto crearÃ¡ una copia del proyecto en tu cuenta
+                  de GitHub.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso2.png"
+                    alt="Paso 2: Fork del repositorio"
+                    class="guide-image" />
+                </div>
+                <div class="info-box">
+                  <p>
+                    <i class="fas fa-info-circle"></i> El fork te permite
+                    trabajar en tu propia copia sin afectar el original.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 3: Clonar el Fork -->
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3><i class="fas fa-download"></i> Clona tu Fork</h3>
+                <p>
+                  Verificar que se forkeo y esta en tu perfil ya que debe decir
+                  tu_perfil / IEEE-CS-UNAP-Workshop <br />
+                  Despues clona tu fork a tu computadora local para poder
+                  trabajar en Ã©l. Usa el botÃ³n "Code" y copia la URL.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso3.png"
+                    alt="Paso 3: Clonar el fork"
+                    class="guide-image" />
+                </div>
+                <div class="code-example">
+                  <pre><code># Clona tu fork (reemplaza TU_USUARIO)
+git clone https://github.com/TU_USUARIO/IEEE-CS-UNAP-Workshop.git
+cd IEEE-CS-UNAP-Workshop</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 4: Configurar Git -->
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h3><i class="fas fa-cog"></i> Configura Git</h3>
+                <p>
+                  Configura tu informaciÃ³n de Git si no lo has hecho antes. Esto
+                  es importante para identificar tus commits. Despues cuando
+                  estes en la carpeta donde quieras clonar tu repo forkeado
+                  tienes que escribir <b>git clone (URL de tu fork)</b>
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso4.png"
+                    alt="Paso 4: Configurar Git"
+                    class="guide-image" />
+                </div>
+                <p>
+                  <b>Nota:</b> Asegurate de que este configurado correctamente
+                </p>
+                <div class="code-example">
+                  <pre><code># Configura tu nombre y email
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu-email@ejemplo.com"
+
+# Verifica la configuraciÃ³n
+git config --list</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 5: Crear Nueva Rama -->
+            <div class="step">
+              <div class="step-number">5</div>
+              <div class="step-content">
+                <h3>
+                  <i class="fas fa-project-diagram"></i> Crea una Nueva Rama
+                </h3>
+                <p>
+                  Crea una rama especÃ­fica para tu contribuciÃ³n. Esto mantiene
+                  tu trabajo organizado y separado de la rama principal. Si te
+                  das cuenta sale como (main) eso hace referencia a la rama
+                  actual donde estas, es por eso que cuando creas una nueva rama
+                  en este caso se llama new-profile, donde salia main ahora dice
+                  new-profile entonces con eso confirmacion el cambio de rama
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso5.png"
+                    alt="Paso 5: Crear nueva rama"
+                    class="guide-image" />
+                </div>
+                <div class="code-example">
+                  <pre><code># Crea y cambia a una nueva rama
+git checkout -b feat/add-tu-nickname
+
+# Verifica que estÃ¡s en la nueva rama
+git branch</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 6: Abrir el Editor -->
+            <div class="step">
+              <div class="step-number">6</div>
+              <div class="step-content">
+                <h3><i class="fas fa-edit"></i> Abre el Editor de CÃ³digo</h3>
+                <p>
+                  Abre el proyecto en tu editor favorito (VS Code, Sublime,
+                  etc.). Ahora que estÃ¡s en una nueva rama, crea un archivo <code>tu-nickname.json</code> 
+                  dentro de la carpeta <code>contributors</code>. Agrega tu informaciÃ³n: nombre, 
+                  nickname, GitHub, LinkedIn, Instagram (opcionales), imagen (puedes usar tu avatar 
+                  de GitHub agregando .png), descripciÃ³n y hasta 4 hobbies.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso6.png"
+                    alt="Paso 6: Abrir editor"
+                    class="guide-image" />
+                </div>
+                <div class="code-example">
+                  <pre><code># Si usas VS Code
+code .
+
+Puedes encontrar el template en <code>templates/contributor-template.json</code>. Recuerda que JSON no 
+permite comentarios, asÃ­ que debes quitar las lÃ­neas con <code>//</code> del template.</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 7: Verificar Cambios y Subir -->
+            <div class="step">
+              <div class="step-number">7</div>
+              <div class="step-content">
+                <h3>
+                  <i class="fas fa-search"></i> Verifica y sube tus Cambios
+                </h3>
+                <p>
+                  Revisa que tus cambios sean correctos y que no hayas
+                  modificado accidentalmente otras partes del archivo.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso7.png"
+                    alt="Paso 7: Verificar cambios"
+                    class="guide-image" />
+                </div>
+                <div class="code-example">
+                  <pre><code># Ver quÃ© archivos han cambiado
+git status
+
+# Para juntar todos los cambios
+git add .
+
+# Para guardar los cambios
+git commit -m "feat: add new profile for [tu-nickname]"
+
+# Para subir a tu repositorio tu rama con cambios
+git push origin feat/new-tu-nickname
+</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 8: Comparar y Pull Request -->
+            <div class="step">
+              <div class="step-number">8</div>
+              <div class="step-content">
+                <h3><i class="fas fa-code-branch"></i> Comparar y Pull Request</h3>
+                <p>
+                  Verifica que ahora tienes 2 ramas en tu repositorio. GitHub te permitirÃ¡ 
+                  "Comparar y hacer Pull Request". Puedes ver que el Ãºltimo autor del cambio 
+                  fuiste tÃº. Haz clic en el botÃ³n verde "Compare & pull request".
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso10.png"
+                    alt="Paso 8: Comparar y PR"
+                    class="guide-image" />
+                </div>
+                <div class="info-box">
+                  <p>
+                    <i class="fas fa-info-circle"></i> GitHub detecta automÃ¡ticamente tu nueva rama y te permite crear el PR
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 9: Crear Pull Request -->
+            <div class="step">
+              <div class="step-number">9</div>
+              <div class="step-content">
+                <h3><i class="fas fa-paper-plane"></i> Crear Pull Request</h3>
+                <p>
+                  Verifica que el Pull Request se harÃ¡ entre el repositorio principal y la rama main, 
+                  mergeando los cambios de tu repo forkeado y tu nueva rama. Agrega un mensaje 
+                  descriptivo explicando tus cambios y haz clic en "Create Pull Request".
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso11.png"
+                    alt="Paso 9: Crear PR"
+                    class="guide-image" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 9.1: Ver Cambios en CÃ³digo -->
+            <div class="step">
+              <div class="step-number">9.1</div>
+              <div class="step-content">
+                <h3><i class="fas fa-code"></i> Revisar Cambios en CÃ³digo</h3>
+                <p>
+                  Puedes revisar todos los cambios realizados en cÃ³digo antes de finalizar 
+                  el Pull Request. Esto te permite verificar que todo estÃ© correcto.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso11.1.png"
+                    alt="Paso 9.1: Ver cambios en cÃ³digo"
+                    class="guide-image" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 10: PR Abierta -->
+            <div class="step">
+              <div class="step-number">10</div>
+              <div class="step-content">
+                <h3><i class="fas fa-eye"></i> Pull Request Abierta</h3>
+                <p>
+                  Tu PR estÃ¡ ahora abierta para revisiÃ³n. Las personas con roles suficientes 
+                  pueden comentar, rechazar o aprobar la PR.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso12.png"
+                    alt="Paso 10: PR abierta"
+                    class="guide-image" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 11: AprobaciÃ³n y Merge -->
+            <div class="step">
+              <div class="step-number">11</div>
+              <div class="step-content">
+                <h3><i class="fas fa-check-circle"></i> AprobaciÃ³n y Merge</h3>
+                <p>
+                  Cuando no hay conflictos y todo estÃ¡ correcto, un revisor puede aprobar 
+                  la PR y hacer el merge. Tus cambios serÃ¡n integrados al repositorio principal.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso13.png"
+                    alt="Paso 11: AprobaciÃ³n y merge"
+                    class="guide-image" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 12: Historial de Commits -->
+            <div class="step">
+              <div class="step-number">12</div>
+              <div class="step-content">
+                <h3><i class="fas fa-history"></i> Historial de Commits</h3>
+                <p>
+                  Puedes ver el historial de commits donde aparece tu commit junto con 
+                  el commit del auditor que aprobÃ³ los cambios. Tu contribuciÃ³n forma 
+                  parte oficial del proyecto.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso14.png"
+                    alt="Paso 12: Historial de commits"
+                    class="guide-image" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Paso 13: Resultado Final -->
+            <div class="step">
+              <div class="step-number">13</div>
+              <div class="step-content">
+                <h3><i class="fas fa-star"></i> Â¡Felicitaciones!</h3>
+                <p>
+                  Â¡Tu contribuciÃ³n ha sido exitosa! Ahora apareces en la pÃ¡gina colaborativa 
+                  con tu perfil, informaciÃ³n y enlaces. Eres oficialmente parte del proyecto.
+                </p>
+                <div class="step-image">
+                  <img
+                    src="../assets/guides-v1/Paso15.png"
+                    alt="Paso 13: Resultado final"
+                    class="guide-image" />
+                </div>
+                <div class="info-box success">
+                  <h4>
+                    <i class="fas fa-trophy"></i> Â¡Has completado tu primera contribuciÃ³n!
+                  </h4>
+                  <ul>
+                    <li>âœ… <strong>Fork realizado</strong> correctamente</li>
+                    <li>âœ… <strong>Repositorio clonado</strong> localmente</li>
+                    <li>âœ… <strong>Rama nueva</strong> creada siguiendo GitFlow</li>
+                    <li>âœ… <strong>Cambios</strong> realizados y commitados</li>
+                    <li>âœ… <strong>Pull Request</strong> creado y aprobado</li>
+                    <li>ðŸŽ‰ <strong>Â¡Apareces en la pÃ¡gina!</strong></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SecciÃ³n de validaciones automÃ¡ticas -->
+      <section class="validation-section">
+        <div class="validation-container">
+          <h2 class="section-title">
+            <i class="fas fa-robot"></i>
+            Sistema de ValidaciÃ³n AutomÃ¡tica
+          </h2>
+          <div class="validation-grid">
+            <div class="validation-item">
+              <div class="validation-icon success">
+                <i class="fas fa-check"></i>
+              </div>
+              <h3>ValidaciÃ³n de Formato</h3>
+              <p>
+                El sistema verifica que el formato de tu contribuciÃ³n sea
+                correcto y que todos los campos requeridos estÃ©n presentes.
+              </p>
+            </div>
+            <div class="validation-item">
+              <div class="validation-icon info">
+                <i class="fas fa-sync"></i>
+              </div>
+              <h3>Auto-merge</h3>
+              <p>
+                Si todas las validaciones pasan, tu PR serÃ¡ automÃ¡ticamente
+                mergeado y aparecerÃ¡s en la pÃ¡gina principal.
+              </p>
+            </div>
+            <div class="validation-item">
+              <div class="validation-icon warning">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <h3>CorrecciÃ³n de Errores</h3>
+              <p>
+                Si hay errores, recibirÃ¡s comentarios especÃ­ficos sobre quÃ©
+                corregir. Puedes hacer nuevos commits para solucionarlos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SecciÃ³n de ejemplos -->
+      <section class="examples-section">
+        <div class="examples-container">
+          <h2 class="section-title">
+            <i class="fas fa-code"></i>
+            Ejemplos de ContribuciÃ³n
+          </h2>
+          <div class="examples-grid">
+            <div class="example-item">
+              <h3>
+                <i class="fas fa-check-circle" style="color: #10b981"></i>
+                Ejemplo Correcto
+              </h3>
+              <div class="code-example">
+                <pre><code>{
+  name: "Ana MarÃ­a GonzÃ¡lez",
+  nickname: "anagonzalez",
+  github: "https://github.com/anagonzalez",
+  linkedin: "https://linkedin.com/in/ana-gonzalez-dev",
+  description: "Estudiante de IngenierÃ­a de Sistemas especializada en desarrollo web",
+  hobbies: ["ProgramaciÃ³n", "Lectura", "Yoga", "FotografÃ­a"]
+},</code></pre>
+              </div>
+            </div>
+            <div class="example-item">
+              <h3>
+                <i class="fas fa-times-circle" style="color: #ef4444"></i>
+                Errores Comunes
+              </h3>
+              <div class="error-list">
+                <div class="error-item">
+                  <i class="fas fa-times"></i>
+                  <span>Falta la coma al final del objeto</span>
+                </div>
+                <div class="error-item">
+                  <i class="fas fa-times"></i>
+                  <span>URL de GitHub incompleta o incorrecta</span>
+                </div>
+                <div class="error-item">
+                  <i class="fas fa-times"></i>
+                  <span>MÃ¡s de 4 hobbies en el array</span>
+                </div>
+                <div class="error-item">
+                  <i class="fas fa-times"></i>
+                  <span
+                    >DescripciÃ³n demasiado larga (mÃ¡s de 150 caracteres)</span
+                  >
+                </div>
+                <div class="error-item">
+                  <i class="fas fa-times"></i>
+                  <span>Nickname duplicado (ya existe en el sistema)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="footer-container">
+          <div class="footer-content">
+            <div class="footer-left">
+              <div class="footer-logo">
+                <div>
+                  <span class="footer-ieee-badge"><i class="fas fa-microchip"></i> IEEE CS UNAP Student Branch</span>
+                </div>
+              </div>
+              <p class="footer-description">
+                Taller colaborativo de Git y GitHub impulsado por la IEEE Computer Society UNAP Student Branch en colaboración con GitHub Education.
+              </p>
+              <div class="footer-partners">
+                <div class="partner-logos">
+                  <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="partner-link">
+                    <img src="../assets/images/Github.png" alt="GitHub Education" class="partner-logo" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="footer-right">
+              <div class="footer-links">
+                <a
+                  href="https://github.com/Dav082004/IEEE-CS-UNAP-Workshop"
+                  target="_blank">
+                  <i class="fab fa-github"></i>
+                  Repositorio
+                </a>
+                <a href="../index.html">
+                  <i class="fas fa-home"></i>
+                  Volver al Inicio
+                </a>
+              </div>
+              <p class="footer-credit">
+                <i class="fas fa-heart" style="color:#44e2cd"></i>
+                Hecho con pasión por la comunidad
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script src="../js/como-contribuir.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+      // Funcionalidad para ampliar imÃ¡genes
+      function openImageModal(img) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        
+        modal.style.display = 'flex';
+        modalImg.src = img.src;
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+
+      // Cerrar modal al hacer click en la X
+      document.getElementById('modalClose').addEventListener('click', closeImageModal);
+
+      // Cerrar modal al hacer click fuera de la imagen
+      document.getElementById('imageModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeImageModal();
+        }
+      });
+
+      // Cerrar modal con la tecla ESC
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeImageModal();
+        }
+      });
+
+      // Agregar la clase clickable a todas las imÃ¡genes de guÃ­a
+      document.addEventListener('DOMContentLoaded', function() {
+        const guideImages = document.querySelectorAll('.guide-image:not(.clickable-image)');
+        guideImages.forEach(img => {
+          img.classList.add('clickable-image');
+          img.setAttribute('onclick', 'openImageModal(this)');
+          
+          // Agregar hint de zoom si no existe
+          if (!img.nextElementSibling || !img.nextElementSibling.classList.contains('image-zoom-hint')) {
+            const hint = document.createElement('div');
+            hint.className = 'image-zoom-hint';
+            hint.innerHTML = '<i class="fas fa-search-plus"></i> Click para ampliar';
+            img.parentElement.appendChild(hint);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+

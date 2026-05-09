@@ -1,0 +1,30 @@
+{
+  "name": "XperienceCampus Workshop",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ritwickdey.LiveServer",
+        "ms-vscode.js-debug",
+        "kisstkondoros.vscode-gutter-preview"
+      ],
+      "settings": {
+        "liveServer.settings.port": 5500,
+        "liveServer.settings.root": "/workspace",
+        "editor.formatOnSave": false
+      }
+    }
+  },
+  "postCreateCommand": "git config --global --add safe.directory /workspaces/IEEE-CS-UNAP-Workshop",
+  "remoteUser": "root",
+  "forwardPorts": [5500],
+  "portsAttributes": {
+    "5500": {
+      "label": "Live Server",
+      "onAutoForward": "notify"
+    }
+  }
+}
