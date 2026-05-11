@@ -252,34 +252,33 @@ function validateContributors() {
 
 // Inicialización cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
-  // Esperar a que se carguen los colaboradores
-  if (window.contributors) {
-    contributors = window.contributors;
-    initializeContributors();
-  } else {
-    window.addEventListener('contributorsLoaded', () => {
+  try {
+    // Esperar a que se carguen los colaboradores
+    if (window.contributors) {
       contributors = window.contributors;
       initializeContributors();
-    });
+    } else {
+      window.addEventListener('contributorsLoaded', () => {
+        try {
+          contributors = Array.isArray(window.contributors) ? window.contributors : [];
+          initializeContributors();
+        } catch (err) {
+          console.error('Error al inicializar colaboradores:', err);
+        }
+      });
+    }
+  } catch (err) {
+    console.error('Error en DOMContentLoaded de contributors:', err);
   }
 });
 
 // Función para inicializar colaboradores
 function initializeContributors() {
-  // Validar datos
-  validateContributors();
-
-  // Renderizar colaboradores
-  renderContributors();
-
-  // Actualizar estadísticas
-  updateStats();
-
-  // Configurar scroll suave
-  smoothScroll();
-
-  // Agregar animaciones de scroll
-  setTimeout(addScrollAnimations, 500);
+  try { validateContributors(); } catch (err) { console.warn('Error validando colaboradores:', err); }
+  try { renderContributors(); } catch (err) { console.error('Error renderizando colaboradores:', err); }
+  try { updateStats(); } catch (err) { console.warn('Error actualizando estadísticas:', err); }
+  try { smoothScroll(); } catch (err) { console.warn('Error en smoothScroll:', err); }
+  try { setTimeout(addScrollAnimations, 500); } catch (err) { console.warn('Error en animaciones:', err); }
 }
 
 // Exportar funciones para testing (si es necesario)

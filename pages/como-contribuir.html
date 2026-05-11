@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CÃ³mo Contribuir - Repositorio Colaborativo</title>
+    <title>Cómo Contribuir — IEEE CS UNAP</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
     <link rel="stylesheet" href="../styles/global.css" />
     <link rel="stylesheet" href="../styles/como-contribuir.css" />
     <link
@@ -22,9 +23,10 @@
         </div>
         <nav class="header-nav" id="headerNav">
           <a href="../index.html" class="nav-link">Inicio</a>
-          <a href="../index.html#participantes" class="nav-link">Miembros</a>
-          <a href="teoria.html" class="nav-link">TeorÃ­a</a>
-          <a href="como-contribuir.html" class="nav-link active">CÃ³mo Contribuir</a>
+          <a href="../index.html#participantes" class="nav-link">Colaboradores</a>
+          <a href="teoria.html" class="nav-link">Teoría</a>
+          <a href="como-contribuir.html" class="nav-link active">Cómo Contribuir</a>
+          <a href="agregar-contribuidor.html" class="nav-link">Agregar Perfil</a>
         </nav>
         <button class="mobile-menu-toggle" id="mobileMenuToggle">
           <span class="hamburger-line"></span>
@@ -34,7 +36,7 @@
       </div>
     </header>
 
-    <!-- Overlay para menÃº mÃ³vil -->
+    <!-- Overlay para menú móvil -->
     <div class="mobile-overlay" id="mobileOverlay"></div>
 
     <!-- Main Content -->
@@ -42,17 +44,17 @@
       <!-- Hero Section Minimalista -->
       <section class="minimal-hero">
         <div class="minimal-hero-container">
-          <h1 class="minimal-title">Â¿CÃ³mo prefieres contribuir?</h1>
-          <p class="minimal-subtitle">Elige el mÃ©todo que mejor se adapte a ti</p>
+          <h1 class="minimal-title">¿Cómo prefieres contribuir?</h1>
+          <p class="minimal-subtitle">Elige el método que mejor se adapte a ti</p>
         </div>
       </section>
 
-      <!-- MÃ©todos de ContribuciÃ³n Minimalista -->
+      <!-- Métodos de Contribución Minimalista -->
       <section class="minimal-methods">
         <div class="minimal-container">
           <div class="minimal-grid">
             
-            <!-- OpciÃ³n Codespace -->
+            <!-- Opción Codespace -->
             <div class="minimal-card recommended">
               <div class="minimal-header">
                 <i class="fas fa-cloud"></i>
@@ -66,16 +68,16 @@
                 Todo listo para empezar en 2 minutos.
               </p>
               <div class="minimal-features">
-                <span>â€¢ Sin configuraciÃ³n</span>
-                <span>â€¢ Editor incluido</span>
-                <span>â€¢ Ideal para principiantes</span>
+                <span>• Sin configuración</span>
+                <span>• Editor incluido</span>
+                <span>• Ideal para principiantes</span>
               </div>
               <a href="como-contribuir-codespace.html" class="minimal-btn primary">
                 Comenzar con Codespace
               </a>
             </div>
 
-            <!-- OpciÃ³n Local -->
+            <!-- Opción Local -->
             <div class="minimal-card">
               <div class="minimal-header">
                 <i class="fas fa-laptop-code"></i>
@@ -85,15 +87,38 @@
               </div>
               <p class="minimal-desc">
                 Trabaja en tu computadora con tu editor favorito. 
-                Requiere configuraciÃ³n inicial.
+                Requiere configuración inicial.
               </p>
               <div class="minimal-features">
-                <span>â€¢ Control total</span>
-                <span>â€¢ Trabajo offline</span>
-                <span>â€¢ Para desarrolladores</span>
+                <span>• Control total</span>
+                <span>• Trabajo offline</span>
+                <span>• Para desarrolladores</span>
               </div>
               <a href="como-contribuir-local.html" class="minimal-btn secondary">
                 Configurar Localmente
+              </a>
+            </div>
+
+            <!-- Opción Formulario Guiado -->
+            <div class="minimal-card">
+              <div class="minimal-header">
+                <i class="fas fa-wand-magic-sparkles"></i>
+                <div class="minimal-info">
+                  <h3>Formulario Guiado</h3>
+                  <span class="minimal-badge" style="background:rgba(68,226,205,0.15);color:#44e2cd;border-color:rgba(68,226,205,0.3);">Automático</span>
+                </div>
+              </div>
+              <p class="minimal-desc">
+                Completa el formulario y tu archivo
+                <code>.json</code> se genera automáticamente. Sin editar código a mano.
+              </p>
+              <div class="minimal-features">
+                <span>• Sin errores de formato</span>
+                <span>• Validación incluida</span>
+                <span>• Máximo 4 hobbies</span>
+              </div>
+              <a href="agregar-contribuidor.html" class="minimal-btn secondary">
+                Abrir Formulario
               </a>
             </div>
 

@@ -1,4 +1,6 @@
-/* =====================================================
+import sys
+
+NEW_CSS = r"""/* =====================================================
    IEEE CS UNAP — TEORIA PAGE STYLES (v2)
    ===================================================== */
 
@@ -464,3 +466,8 @@
   .resources-actions { flex-direction: column; align-items: center; }
   .copilot-features { flex-direction: column; gap: var(--spacing-sm); }
 }
+"""
+
+with open('C:/Users/User/Desktop/IEEE/styles/teoria.css', 'w', encoding='utf-8') as f:
+    f.write(NEW_CSS)
+print("teoria.css written:", len(NEW_CSS), "chars")

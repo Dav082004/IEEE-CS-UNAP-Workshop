@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agregar Perfil — IEEE CS UNAP</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/agregar-contribuidor.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <div class="header-title">
+          <h1>IEEE&nbsp;CS&nbsp;UNAP</h1>
+        </div>
+        <nav class="header-nav" id="headerNav">
+          <a href="../index.html" class="nav-link">Inicio</a>
+          <a href="../index.html#participantes" class="nav-link">Colaboradores</a>
+          <a href="teoria.html" class="nav-link">Teoría</a>
+          <a href="como-contribuir.html" class="nav-link">Cómo Contribuir</a>
+          <a href="agregar-contribuidor.html" class="nav-link active">Agregar Perfil</a>
+        </nav>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <main>
+      <!-- Hero -->
+      <section class="ac-hero">
+        <div class="ac-hero-inner">
+          <div class="ac-hero-badge">
+            <i class="fas fa-user-plus"></i>
+            Formulario de Contribución
+          </div>
+          <h1 class="ac-hero-title">
+            Agrega tu <span class="gradient-text">perfil</span>
+          </h1>
+          <p class="ac-hero-sub">
+            Completa el formulario, revisamos tus datos y generamos el archivo
+            <code>tu-nickname.json</code> listo para usar. Sin necesidad de crearlo a mano.
+          </p>
+        </div>
+      </section>
+
+      <!-- Aviso de proceso -->
+      <section class="ac-process-note">
+        <div class="ac-container">
+          <div class="ac-note-grid">
+            <div class="ac-note-item">
+              <i class="fas fa-file-code"></i>
+              <div>
+                <strong>¿Qué hace esto?</strong>
+                <p>Genera el archivo <code>.json</code> de tu perfil automáticamente con los datos que ingresas.</p>
+              </div>
+            </div>
+            <div class="ac-note-item">
+              <i class="fas fa-download"></i>
+              <div>
+                <strong>¿Qué hago con el archivo?</strong>
+                <p>Lo descargas, lo subes a la carpeta <code>contributors/</code> de tu fork y haces el Pull Request.</p>
+              </div>
+            </div>
+            <div class="ac-note-item">
+              <i class="fas fa-shield-alt"></i>
+              <div>
+                <strong>Validación incluida</strong>
+                <p>Se verifican todos los campos antes de generar. Máximo 4 hobbies para que el pipeline no falle.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Formulario + Vista previa -->
+      <section class="ac-main-section">
+        <div class="ac-container">
+          <div class="ac-split">
+
+            <!-- Panel izquierdo: formulario -->
+            <div class="ac-form-panel">
+              <div class="ac-panel-header">
+                <i class="fas fa-pen-to-square"></i>
+                <span>Tus datos</span>
+              </div>
+
+              <form id="contributorForm" novalidate>
+
+                <!-- Nombre -->
+                <div class="ac-field">
+                  <label for="f-name" class="ac-label">
+                    Nombre completo <span class="ac-required">*</span>
+                  </label>
+                  <input
+                    type="text" id="f-name" name="name"
+                    class="ac-input" placeholder="Ej: María González"
+                    maxlength="80" autocomplete="name" required />
+                  <span class="ac-error" id="err-name"></span>
+                </div>
+
+                <!-- Nickname -->
+                <div class="ac-field">
+                  <label for="f-nick" class="ac-label">
+                    Nickname (usuario GitHub) <span class="ac-required">*</span>
+                  </label>
+                  <input
+                    type="text" id="f-nick" name="nickname"
+                    class="ac-input" placeholder="Ej: mariagonzalez"
+                    maxlength="40" autocomplete="off" required />
+                  <span class="ac-hint">Este será también el nombre del archivo: <code id="hint-filename">tu-nickname.json</code></span>
+                  <span class="ac-error" id="err-nick"></span>
+                </div>
+
+                <!-- GitHub -->
+                <div class="ac-field">
+                  <label for="f-github" class="ac-label">Perfil de GitHub</label>
+                  <div class="ac-input-prefix">
+                    <span class="ac-prefix">github.com/</span>
+                    <input
+                      type="text" id="f-github" name="github"
+                      class="ac-input ac-input-has-prefix" placeholder="tu-usuario"
+                      maxlength="60" autocomplete="off" />
+                  </div>
+                  <span class="ac-error" id="err-github"></span>
+                </div>
+
+                <!-- LinkedIn -->
+                <div class="ac-field">
+                  <label for="f-linkedin" class="ac-label">LinkedIn <span class="ac-optional">(opcional)</span></label>
+                  <div class="ac-input-prefix">
+                    <span class="ac-prefix">linkedin.com/in/</span>
+                    <input
+                      type="text" id="f-linkedin" name="linkedin"
+                      class="ac-input ac-input-has-prefix" placeholder="tu-perfil"
+                      maxlength="80" autocomplete="off" />
+                  </div>
+                </div>
+
+                <!-- Instagram -->
+                <div class="ac-field">
+                  <label for="f-instagram" class="ac-label">Instagram <span class="ac-optional">(opcional)</span></label>
+                  <div class="ac-input-prefix">
+                    <span class="ac-prefix">instagram.com/</span>
+                    <input
+                      type="text" id="f-instagram" name="instagram"
+                      class="ac-input ac-input-has-prefix" placeholder="tu-usuario"
+                      maxlength="60" autocomplete="off" />
+                  </div>
+                </div>
+
+                <!-- Imagen -->
+                <div class="ac-field">
+                  <label for="f-image" class="ac-label">URL de imagen <span class="ac-optional">(opcional)</span></label>
+                  <input
+                    type="text" id="f-image" name="image"
+                    class="ac-input" placeholder="Deja vacío para usar tu avatar de GitHub"
+                    maxlength="300" autocomplete="off" />
+                  <span class="ac-hint">Si dejas esto vacío y tienes GitHub, se usa <code>https://github.com/tu-usuario.png</code> automáticamente.</span>
+                  <span class="ac-error" id="err-image"></span>
+                </div>
+
+                <!-- Descripción -->
+                <div class="ac-field">
+                  <label for="f-desc" class="ac-label">
+                    Descripción breve <span class="ac-required">*</span>
+                  </label>
+                  <textarea
+                    id="f-desc" name="description"
+                    class="ac-input ac-textarea" placeholder="Ej: Desarrollador web apasionado por Python y el open source"
+                    maxlength="200" required rows="3"></textarea>
+                  <div class="ac-char-counter">
+                    <span id="desc-count">0</span>/200 caracteres
+                  </div>
+                  <span class="ac-error" id="err-desc"></span>
+                </div>
+
+                <!-- Hobbies -->
+                <div class="ac-field">
+                  <label class="ac-label">
+                    Hobbies <span class="ac-required">*</span>
+                    <span class="ac-hint-inline">— mínimo 1, máximo 4</span>
+                  </label>
+                  <div class="ac-hobbies-container" id="hobbiesContainer">
+                    <div class="ac-hobby-row">
+                      <input type="text" class="ac-input ac-hobby-input" placeholder="Ej: Programación" maxlength="40" />
+                      <button type="button" class="ac-hobby-remove" aria-label="Quitar hobby" style="display:none">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <button type="button" id="addHobbyBtn" class="ac-add-hobby-btn">
+                    <i class="fas fa-plus"></i> Agregar hobby
+                  </button>
+                  <span class="ac-error" id="err-hobbies"></span>
+                </div>
+
+                <!-- Botón generar -->
+                <div class="ac-form-actions">
+                  <button type="submit" id="generateBtn" class="ac-btn-generate">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    Generar mi archivo JSON
+                  </button>
+                </div>
+
+              </form>
+            </div>
+
+            <!-- Panel derecho: vista previa en vivo -->
+            <div class="ac-preview-panel">
+              <div class="ac-panel-header">
+                <i class="fas fa-file-code"></i>
+                <span>Vista previa del archivo</span>
+              </div>
+
+              <!-- Nombre del archivo -->
+              <div class="ac-file-tab">
+                <i class="fas fa-file"></i>
+                <span id="preview-filename">tu-nickname.json</span>
+              </div>
+
+              <!-- Código JSON en vivo -->
+              <pre class="ac-json-preview" id="jsonPreview" aria-live="polite" aria-label="Vista previa del JSON generado"><code id="jsonPreviewCode"><!-- Se rellena al escribir --></code></pre>
+
+              <!-- Avatar preview -->
+              <div class="ac-avatar-preview" id="avatarPreview" aria-hidden="true">
+                <div class="ac-avatar-label">Vista previa del avatar</div>
+                <div class="ac-avatar-img-wrap" id="avatarImgWrap">
+                  <div class="ac-avatar-initials" id="avatarInitials">?</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Pasos de generación (ocultos hasta que se genera) -->
+          <div class="ac-steps-section" id="stepsSection" aria-live="polite">
+            <div class="ac-steps-title">
+              <i class="fas fa-list-check"></i>
+              Proceso de creación del archivo
+            </div>
+            <div class="ac-steps-list" id="stepsList">
+              <div class="ac-step" data-step="1">
+                <div class="ac-step-icon"><i class="fas fa-clipboard-check"></i></div>
+                <div class="ac-step-content">
+                  <div class="ac-step-title">Validando datos</div>
+                  <div class="ac-step-desc">Verificando que todos los campos obligatorios estén correctos...</div>
+                </div>
+                <div class="ac-step-status"><i class="fas fa-circle-notch fa-spin"></i></div>
+              </div>
+              <div class="ac-step" data-step="2">
+                <div class="ac-step-icon"><i class="fas fa-code"></i></div>
+                <div class="ac-step-content">
+                  <div class="ac-step-title">Generando estructura JSON</div>
+                  <div class="ac-step-desc">Construyendo el objeto con tus datos...</div>
+                </div>
+                <div class="ac-step-status"></div>
+              </div>
+              <div class="ac-step" data-step="3">
+                <div class="ac-step-icon"><i class="fas fa-file-circle-plus"></i></div>
+                <div class="ac-step-content">
+                  <div class="ac-step-title">Creando archivo <span id="step3-filename">tu-nickname.json</span></div>
+                  <div class="ac-step-desc">Preparando el archivo para descarga en <code>contributors/</code>...</div>
+                </div>
+                <div class="ac-step-status"></div>
+              </div>
+              <div class="ac-step" data-step="4">
+                <div class="ac-step-icon"><i class="fas fa-circle-check"></i></div>
+                <div class="ac-step-content">
+                  <div class="ac-step-title">¡Listo!</div>
+                  <div class="ac-step-desc">Tu archivo está listo para descargar y subirlo a tu fork.</div>
+                </div>
+                <div class="ac-step-status"></div>
+              </div>
+            </div>
+
+            <!-- Resultado final -->
+            <div class="ac-result" id="acResult">
+              <div class="ac-result-header">
+                <i class="fas fa-check-circle"></i>
+                <strong>Archivo generado correctamente</strong>
+              </div>
+              <div class="ac-result-filename" id="result-filename">tu-nickname.json</div>
+              <div class="ac-result-actions">
+                <button id="downloadBtn" class="ac-btn-download">
+                  <i class="fas fa-download"></i> Descargar JSON
+                </button>
+                <button id="resetBtn" class="ac-btn-reset">
+                  <i class="fas fa-rotate-left"></i> Crear otro
+                </button>
+              </div>
+              <div class="ac-result-next">
+                <p><strong>¿Qué sigue?</strong></p>
+                <ol>
+                  <li>Descarga el archivo <strong id="next-filename">tu-nickname.json</strong></li>
+                  <li>Súbelo a la carpeta <code>contributors/</code> de tu fork</li>
+                  <li>Haz commit y push de los cambios</li>
+                  <li>Crea un Pull Request al repositorio original</li>
+                </ol>
+                <a href="como-contribuir.html" class="ac-next-link">
+                  <i class="fas fa-book-open"></i>
+                  Ver guía completa de contribución
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-left">
+            <span class="footer-ieee-badge">
+              <i class="fas fa-microchip"></i>
+              IEEE CS UNAP Student Branch
+            </span>
+            <p class="footer-description">
+              Taller colaborativo de Git y GitHub impulsado por la IEEE Computer Society UNAP.
+            </p>
+          </div>
+          <div class="footer-right">
+            <div class="footer-links">
+              <a href="https://github.com/Dav082004/IEEE-CS-UNAP-Workshop" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-github"></i> Repositorio
+              </a>
+            </div>
+            <p class="footer-credit">
+              <i class="fas fa-heart" style="color:#44e2cd"></i>
+              Hecho con pasión por la comunidad
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="../js/agregar-contribuidor.js"></script>
+  </body>
+</html>

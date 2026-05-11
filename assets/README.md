@@ -8,9 +8,6 @@ Esta carpeta contiene todos los recursos estáticos del proyecto organizados por
 assets/
 ├── images/          # Imágenes generales del proyecto
 │   └── Github.png   # Logo de GitHub
-├── logos/           # Logos de organizaciones y patrocinadores
-│   ├── Logo_DSCUTP.png           # Logo (legacy)
-│   └── Logo_XperienceCampus.jpg  # Logo (legacy)
 ├── guides-v1/       # Guía paso a paso versión 1 (Contribución básica)
 │   ├── Paso1.png
 │   ├── Paso2.png

@@ -3,23 +3,20 @@
 // ========================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    initializeTheoryPage();
+    try {
+        initializeTheoryPage();
+    } catch (err) {
+        console.error('Error al inicializar la página de teoría:', err);
+    }
 });
 
 function initializeTheoryPage() {
-    // Inicializar animaciones de entrada
     initializeScrollAnimations();
-    
-    // Inicializar navegación suave
     initializeSmoothScrolling();
-    
-    // Inicializar efectos interactivos
     initializeInteractiveEffects();
-    
-    // Inicializar navegación móvil (heredado del script principal)
     initializeMobileNavigation();
-    
-    console.log('🎓 Theory page initialized successfully!');
+    initializeScrollProgress();
+    initializeHeroNavHighlight();
 }
 
 // ========================================
@@ -471,22 +468,69 @@ function optimizePerformance() {
 // Inicializar mejoras adicionales
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
-        handleImageErrors();
-        initializeLazyLoading();
-        improveAccessibility();
-        optimizePerformance();
-    }, 1000);
+        try {
+            handleImageErrors();
+            initializeLazyLoading();
+            improveAccessibility();
+            optimizePerformance();
+        } catch (err) {
+            console.warn('Advertencia en mejoras adicionales:', err);
+        }
+    }, 500);
 });
 
 // ========================================
-// EXPORT FUNCTIONS (si se usa como módulo)
+// SCROLL PROGRESS BAR
+// ========================================
+
+function initializeScrollProgress() {
+    const bar = document.getElementById('scrollProgress');
+    if (!bar) return;
+
+    const update = () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+        bar.style.width = pct + '%';
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+}
+
+// ========================================
+// HERO NAV HIGHLIGHT ON SCROLL
+// ========================================
+
+function initializeHeroNavHighlight() {
+    const sections = [
+        { id: 'git-basics',       link: 'a[href="#git-basics"]' },
+        { id: 'github-ecosystem', link: 'a[href="#github-ecosystem"]' },
+        { id: 'workflows',        link: 'a[href="#workflows"]' },
+    ];
+
+    const links = sections.map(s => document.querySelector('.hero-navigation ' + s.link));
+    const sectionEls = sections.map(s => document.getElementById(s.id));
+
+    if (links.every(l => !l)) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const idx = sectionEls.indexOf(entry.target);
+            if (idx === -1) return;
+            links.forEach(l => l && l.classList.remove('active'));
+            if (links[idx]) links[idx].classList.add('active');
+        });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+
+    sectionEls.forEach(el => el && observer.observe(el));
+}
+
+// ========================================
+// EXPORT (si se usa como módulo)
 // ========================================
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        initializeTheoryPage,
-        initializeScrollAnimations,
-        initializeSmoothScrolling,
-        initializeInteractiveEffects
-    };
+    module.exports = { initializeTheoryPage };
 }

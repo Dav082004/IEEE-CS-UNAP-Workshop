@@ -1,29 +1,33 @@
 // Script principal para funcionalidades interactivas
 document.addEventListener("DOMContentLoaded", () => {
-  initializeApp();
+  try {
+    initializeApp();
+  } catch (err) {
+    console.error('Error al inicializar la página principal:', err);
+  }
 });
 
 function initializeApp() {
   // Configurar menú móvil
-  setupMobileMenu();
+  try { setupMobileMenu(); } catch (e) { console.warn('setupMobileMenu:', e); }
 
   // Configurar efectos de parallax
-  setupParallaxEffects();
+  try { setupParallaxEffects(); } catch (e) { console.warn('setupParallaxEffects:', e); }
 
   // Configurar efectos de hover en tarjetas
-  setupCardEffects();
+  try { setupCardEffects(); } catch (e) { console.warn('setupCardEffects:', e); }
 
   // Configurar navegación suave
-  setupSmoothNavigation();
+  try { setupSmoothNavigation(); } catch (e) { console.warn('setupSmoothNavigation:', e); }
 
   // Inicializar contadores animados
-  initializeCounters();
+  try { initializeCounters(); } catch (e) { console.warn('initializeCounters:', e); }
 
   // Configurar efectos de typing en el título
-  setupTypingEffect();
+  try { setupTypingEffect(); } catch (e) { console.warn('setupTypingEffect:', e); }
 
   // Configurar partículas de fondo
-  setupBackgroundParticles();
+  try { setupBackgroundParticles(); } catch (e) { console.warn('setupBackgroundParticles:', e); }
 }
 
 // Efectos de parallax suaves

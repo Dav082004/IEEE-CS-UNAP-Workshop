@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IEEE CS UNAP — Taller Git &amp; GitHub</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
     <meta name="description" content="Taller colaborativo de Git y GitHub organizado por la IEEE Computer Society UNAP Student Branch. Aprende control de versiones y contribución open source." />
     <link rel="stylesheet" href="styles/global.css" />
     <link rel="stylesheet" href="styles/index.css" />
@@ -26,6 +27,7 @@
           <a href="#participantes" class="nav-link">Colaboradores</a>
           <a href="pages/teoria.html" class="nav-link">Teoría</a>
           <a href="pages/como-contribuir.html" class="nav-link">Cómo Contribuir</a>
+          <a href="pages/agregar-contribuidor.html" class="nav-link">Agregar Perfil</a>
         </nav>
         <button class="mobile-menu-toggle" id="mobileMenuToggle">
           <span class="hamburger-line"></span>
@@ -142,17 +144,28 @@
 
     <!-- Load contributors data from API -->
     <script>
-      // Cargar colaboradores desde la API JSON
+      // Cargar colaboradores desde public/index.json
       fetch('public/index.json')
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          return response.json();
+        })
         .then(data => {
+          if (!Array.isArray(data)) throw new Error('Formato de datos inválido');
           window.contributors = data;
-          // Disparar evento personalizado cuando los datos estén listos
           window.dispatchEvent(new Event('contributorsLoaded'));
         })
         .catch(error => {
-          console.error('Error loading contributors:', error);
+          console.error('Error al cargar colaboradores:', error);
           window.contributors = [];
+          window.dispatchEvent(new Event('contributorsLoaded'));
+          // Mostrar mensaje de error amigable en la cuadrícula
+          var grid = document.getElementById('contributors-grid');
+          if (grid) {
+            grid.innerHTML = '<p style="color:var(--on-surface-variant);text-align:center;padding:2rem;grid-column:1/-1;">' +
+              '<i class="fas fa-circle-exclamation" style="color:#ffb4ab;margin-right:8px"></i>' +
+              'No se pudieron cargar los perfiles. Recarga la página o abre el proyecto desde un servidor local.</p>';
+          }
         });
     </script>
     <script src="js/contributors.js"></script>

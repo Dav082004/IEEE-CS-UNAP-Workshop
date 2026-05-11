@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teoría Git &amp; GitHub — IEEE CS UNAP</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
     <link rel="stylesheet" href="../styles/global.css" />
     <link rel="stylesheet" href="../styles/teoria.css" />
     <link
@@ -22,9 +23,10 @@
         </div>
         <nav class="header-nav" id="headerNav">
           <a href="../index.html" class="nav-link">Inicio</a>
-          <a href="../index.html#participantes" class="nav-link">Miembros</a>
+          <a href="../index.html#participantes" class="nav-link">Colaboradores</a>
           <a href="teoria.html" class="nav-link active">Teoría</a>
           <a href="como-contribuir.html" class="nav-link">Cómo Contribuir</a>
+          <a href="agregar-contribuidor.html" class="nav-link">Agregar Perfil</a>
         </nav>
         <button class="mobile-menu-toggle" id="mobileMenuToggle">
           <span class="hamburger-line"></span>
@@ -37,9 +39,43 @@
     <!-- Overlay para menú móvil -->
     <div class="mobile-overlay" id="mobileOverlay"></div>
 
+    <!-- Barra de progreso de lectura -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Main Content -->
     <main>
-      
+
+      <!-- Hero Teoría -->
+      <section class="theory-hero">
+        <div class="theory-hero-container">
+          <div class="hero-content">
+            <div class="hero-badge">
+              <i class="fas fa-graduation-cap"></i>
+              Material del Taller
+            </div>
+            <h1 class="hero-title">
+              <span class="gradient-text">Git &amp; GitHub</span>
+              desde cero
+            </h1>
+            <p class="hero-subtitle">
+              Todo lo que necesitas saber para contribuir con confianza.
+              Conceptos explicados de forma simple, sin rodeos.
+            </p>
+            <nav class="hero-navigation" aria-label="Secciones del material">
+              <a href="#git-basics" class="hero-nav-link active">
+                <i class="fas fa-code-branch"></i> Git Básico
+              </a>
+              <a href="#github-ecosystem" class="hero-nav-link">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+              <a href="#workflows" class="hero-nav-link">
+                <i class="fas fa-project-diagram"></i> Workflows
+              </a>
+            </nav>
+          </div>
+        </div>
+      </section>
+
       <!-- Sección Git Básico -->
       <section id="git-basics" class="theory-section">
         <div class="theory-container">
@@ -100,25 +136,25 @@
                     <strong>Piensa en Git como escribir una carta importante:</strong>
                   </p>
                 </div>
-                <div class="git-states">
+                <div class="states-workflow">
                   <div class="state-item working">
-                    <div class="state-circle">1</div>
+                    <div class="state-number">1</div>
                     <div class="state-info">
                       <h4>📝 Escribiendo</h4>
                       <p>Estás editando tu código, como escribir en un borrador</p>
                     </div>
                   </div>
-                  <div class="state-arrow">↓</div>
+                  <div class="state-connector"></div>
                   <div class="state-item staging">
-                    <div class="state-circle">2</div>
+                    <div class="state-number">2</div>
                     <div class="state-info">
                       <h4>📋 Revisando</h4>
                       <p>Seleccionas qué cambios incluir (git add), como elegir qué poner en la carta</p>
                     </div>
                   </div>
-                  <div class="state-arrow">↓</div>
+                  <div class="state-connector"></div>
                   <div class="state-item committed">
-                    <div class="state-circle">3</div>
+                    <div class="state-number">3</div>
                     <div class="state-info">
                       <h4>📮 Enviando</h4>
                       <p>Guardas los cambios permanentemente (git commit), como enviar la carta</p>
@@ -802,6 +838,5 @@ console.log("¡Hello World!");
     </main>
 
     <script src="../js/teoria.js"></script>
-    <script src="../js/script.js"></script>
   </body>
 </html>
