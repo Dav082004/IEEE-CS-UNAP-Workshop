@@ -20,7 +20,7 @@ jobs:
     steps:
       # 1. Checkout del PR
       - name: 📥 Checkout PR
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # 2. Setup de Node.js
       - name: 🔧 Setup Node.js
