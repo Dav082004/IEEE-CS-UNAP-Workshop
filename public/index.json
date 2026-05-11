@@ -12,21 +12,6 @@
     ]
   },
   {
-    "name": "Sofia Flores",
-    "nickname": "flowerSof",
-    "github": "https://github.com/flowerSof",
-    "linkedin": "https://www.linkedin.com/in/sofia-flores-garcia-7082272b6/",
-    "instagram": "https://www.instagram.com/sha_flowerss/",
-    "image": "https://github.com/flowerSof.png",
-    "description": "Data Analytics, Full-stack developer apasionada por java, python",
-    "hobbies": [
-      "Programación",
-      "Open Source",
-      "Gaming",
-      "read"
-    ]
-  },
-  {
     "name": "OctocatChambeador",
     "nickname": "xde268106-lab",
     "github": "https://github.com/xde268106-lab",
@@ -39,20 +24,6 @@
       "Open Source",
       "Github",
       "IoT"
-    ]
-  },
-  {
-    "name": "yefer alegre olano",
-    "nickname": "yeferalegre",
-    "github": "https://github.com/BANAKIRX",
-    "instagram": "https://instagram.com/yeferalegre/",
-    "image": "https://github.com/yeferalegre.png",
-    "description": "Full-stack developer apasionada por JavaScript y React",
-    "hobbies": [
-      "Programación",
-      "Open Source",
-      "Gaming",
-      "Fotografía"
     ]
   }
 ]
