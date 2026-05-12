@@ -1,9 +1,10 @@
 name: ✅ Validate PR
 
-# Se dispara en TODA PR hacia main, sin filtro de paths,
-# para poder detectar si alguien toca archivos fuera de contributors/
+# pull_request_target corre en el contexto del repo base (tiene permisos
+# de escritura en PRs incluso desde forks), por eso podemos comentar.
+# El checkout usa el merge commit para validar el resultado final.
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - main
     types: [opened, synchronize, reopened]
@@ -21,10 +22,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout completo del PR
+      # 1. Checkout del merge commit de la PR (base + head combinados)
+      #    Así validamos el resultado final sin correr código del fork directamente.
       - name: 📥 Checkout PR
         uses: actions/checkout@v4
         with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
           fetch-depth: 0
 
       # 2. Setup de Node.js
@@ -38,7 +41,7 @@ jobs:
         id: changed
         run: |
           # Lista de archivos modificados/añadidos/renombrados en esta PR
-          FILES=$(git diff --name-only --diff-filter=ACMRT origin/${{ github.base_ref }}...HEAD)
+          FILES=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           echo "Lista de archivos modificados:"
           echo "$FILES"
           # Guardar en variable de entorno multilínea
