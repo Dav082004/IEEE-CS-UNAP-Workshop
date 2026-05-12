@@ -3,11 +3,7 @@
 // ========================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    try {
-        initializeTheoryPage();
-    } catch (err) {
-        console.error('Error al inicializar la página de teoría:', err);
-    }
+    initializeTheoryPage();
 });
 
 function initializeTheoryPage() {
@@ -19,10 +15,7 @@ function initializeTheoryPage() {
     initializeHeroNavHighlight();
 }
 
-// ========================================
-// SCROLL ANIMATIONS
-// ========================================
-
+// Animaciones de entrada con IntersectionObserver
 function initializeScrollAnimations() {
     // Crear observer para animaciones de entrada
     const observerOptions = {
@@ -61,10 +54,7 @@ function initializeScrollAnimations() {
     });
 }
 
-// ========================================
-// SMOOTH SCROLLING
-// ========================================
-
+// Scroll suave para enlaces internos
 function initializeSmoothScrolling() {
     // Navegación del hero
     const heroNavLinks = document.querySelectorAll('.hero-nav-link');
@@ -112,20 +102,16 @@ function initializeSmoothScrolling() {
     });
 }
 
+// Highlight temporal de sección
 function highlightSection(element) {
-    // Agregar clase de highlight temporal
     element.classList.add('section-highlight');
     
-    // Remover después de 2 segundos
     setTimeout(() => {
         element.classList.remove('section-highlight');
     }, 2000);
 }
 
-// ========================================
-// INTERACTIVE EFFECTS
-// ========================================
-
+// Efectos interactivos: hover en cards, git states, typing, counter, parallax
 function initializeInteractiveEffects() {
     // Efecto de hover para comandos
     initializeCommandHoverEffects();
@@ -145,16 +131,9 @@ function initializeInteractiveEffects() {
 
 function initializeCommandHoverEffects() {
     const commandCards = document.querySelectorAll('.command-card');
-    
-    commandCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            // Agregar efecto de pulse al código
             const codeElement = this.querySelector('code');
-            if (codeElement) {
-                codeElement.style.animation = 'pulse 0.6s ease-in-out';
-            }
-            
-            // Agregar brillo al tipo de comando
+            if (codeElement) codeElement.style.animation = 'pulse 0.6s ease-in-out';
+
             const commandType = this.querySelector('.command-type');
             if (commandType) {
                 commandType.style.transform = 'scale(1.05)';
@@ -164,10 +143,8 @@ function initializeCommandHoverEffects() {
         
         card.addEventListener('mouseleave', function() {
             const codeElement = this.querySelector('code');
-            if (codeElement) {
-                codeElement.style.animation = '';
-            }
-            
+            if (codeElement) codeElement.style.animation = '';
+
             const commandType = this.querySelector('.command-type');
             if (commandType) {
                 commandType.style.transform = '';
@@ -179,8 +156,6 @@ function initializeCommandHoverEffects() {
 
 function initializeGitStatesAnimation() {
     const stateItems = document.querySelectorAll('.state-item');
-    
-    // Animar los estados en secuencia cuando entren en vista
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -205,7 +180,7 @@ function animateGitStatesSequence(container) {
             state.style.transform = 'scale(1.05)';
             state.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
             
-            // Animar la flecha después del estado
+            // Animar flecha
             if (arrows[index]) {
                 setTimeout(() => {
                     arrows[index].style.transform = 'scale(1.2)';
@@ -213,7 +188,7 @@ function animateGitStatesSequence(container) {
                 }, 300);
             }
             
-            // Volver al estado normal
+            // Restaurar estado
             setTimeout(() => {
                 state.style.transform = '';
                 state.style.boxShadow = '';
@@ -228,7 +203,6 @@ function animateGitStatesSequence(container) {
 
 function initializeTypingEffect() {
     const codeBlocks = document.querySelectorAll('.code-block code');
-    
     codeBlocks.forEach(block => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -312,10 +286,7 @@ function initializeParallaxEffect() {
     });
 }
 
-// ========================================
-// MOBILE NAVIGATION (desde script.js)
-// ========================================
-
+// Menú móvil
 function initializeMobileNavigation() {
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const headerNav = document.getElementById('headerNav');
@@ -368,21 +339,16 @@ function initializeMobileNavigation() {
 // UTILITY FUNCTIONS
 // ========================================
 
-// Función para manejar errores de carga de imágenes
 function handleImageErrors() {
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
+    document.querySelectorAll('img').forEach(img => {
         img.addEventListener('error', function() {
             this.style.display = 'none';
-            console.warn(`Failed to load image: ${this.src}`);
         });
     });
 }
 
-// Función para lazy loading de contenido pesado
 function initializeLazyLoading() {
     const lazyElements = document.querySelectorAll('[data-lazy]');
-    
     const lazyObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -403,9 +369,7 @@ function initializeLazyLoading() {
     lazyElements.forEach(element => lazyObserver.observe(element));
 }
 
-// Función para mejorar accesibilidad
 function improveAccessibility() {
-    // Agregar soporte para navegación por teclado
     const interactiveElements = document.querySelectorAll(`
         .command-card,
         .ecosystem-card,
@@ -414,75 +378,38 @@ function improveAccessibility() {
     `);
     
     interactiveElements.forEach(element => {
-        // Hacer focuseable si no lo es
-        if (!element.hasAttribute('tabindex')) {
-            element.setAttribute('tabindex', '0');
-        }
-        
-        // Agregar eventos de teclado
+        if (!element.hasAttribute('tabindex')) element.setAttribute('tabindex', '0');
         element.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
-            }
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
         });
     });
-    
-    // Mejorar anuncios para lectores de pantalla
-    const sections = document.querySelectorAll('.theory-section');
-    sections.forEach((section, index) => {
+
+    document.querySelectorAll('.theory-section').forEach(section => {
         if (!section.hasAttribute('aria-label')) {
             const title = section.querySelector('h2, h3');
-            if (title) {
-                section.setAttribute('aria-label', title.textContent);
-            }
+            if (title) section.setAttribute('aria-label', title.textContent);
         }
     });
 }
 
-// Función para optimizar rendimiento
 function optimizePerformance() {
-    // Debounce para eventos de scroll
-    let scrollTimeout;
-    const originalScrollHandler = window.onscroll;
-    
-    window.addEventListener('scroll', function() {
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-        
-        scrollTimeout = setTimeout(() => {
-            if (originalScrollHandler) {
-                originalScrollHandler();
-            }
-        }, 16); // 60fps
-    }, { passive: true });
-    
-    // Reducir animaciones si el usuario prefiere menos movimiento
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         document.documentElement.style.setProperty('--animation-duration', '0.01s');
         document.documentElement.style.setProperty('--transition-duration', '0.01s');
     }
 }
 
-// Inicializar mejoras adicionales
+// Funciones de soporte adicionales (accesibilidad, lazy loading, rendimiento)
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
-        try {
-            handleImageErrors();
-            initializeLazyLoading();
-            improveAccessibility();
-            optimizePerformance();
-        } catch (err) {
-            console.warn('Advertencia en mejoras adicionales:', err);
-        }
+        handleImageErrors();
+        initializeLazyLoading();
+        improveAccessibility();
+        optimizePerformance();
     }, 500);
 });
 
-// ========================================
-// SCROLL PROGRESS BAR
-// ========================================
-
+// Barra de progreso de scroll
 function initializeScrollProgress() {
     const bar = document.getElementById('scrollProgress');
     if (!bar) return;
@@ -498,10 +425,7 @@ function initializeScrollProgress() {
     update();
 }
 
-// ========================================
-// HERO NAV HIGHLIGHT ON SCROLL
-// ========================================
-
+// Resalta el enlace del hero-nav según la sección visible
 function initializeHeroNavHighlight() {
     const sections = [
         { id: 'git-basics',       link: 'a[href="#git-basics"]' },
@@ -525,12 +449,4 @@ function initializeHeroNavHighlight() {
     }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
 
     sectionEls.forEach(el => el && observer.observe(el));
-}
-
-// ========================================
-// EXPORT (si se usa como módulo)
-// ========================================
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { initializeTheoryPage };
 }

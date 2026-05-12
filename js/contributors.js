@@ -1,9 +1,5 @@
-// ============================================================================
-// FUNCIONES PARA RENDERIZAR COLABORADORES
-// Los datos se cargan desde public/index.json
-// ============================================================================
+// Carga y renderiza las tarjetas de colaboradores desde public/index.json
 
-// Variable global para los colaboradores (se carga desde index.json)
 let contributors = [];
 
 // Escapa caracteres HTML para prevenir XSS
@@ -17,7 +13,7 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-// Valida que una URL sea http/https (previene javascript: XSS)
+// Valida que la URL sea http/https
 function safeUrl(url) {
   if (!url) return '#';
   try {
@@ -28,7 +24,7 @@ function safeUrl(url) {
   }
 }
 
-// Función para obtener las iniciales del nombre
+// Iniciales del nombre (máx. 2 letras)
 function getInitials(name) {
   return name
     .split(" ")
@@ -38,7 +34,7 @@ function getInitials(name) {
     .slice(0, 2);
 }
 
-// Función para generar un color basado en el nombre
+// Color de avatar basado en hash del nombre
 function getColorFromName(name) {
   const colors = [
     "linear-gradient(135deg, #38bdf8 0%, #44e2cd 100%)",
@@ -61,7 +57,7 @@ function getColorFromName(name) {
   return colors[Math.abs(hash) % colors.length];
 }
 
-// Función para renderizar las tarjetas de colaboradores
+// Renderiza la grilla de tarjetas
 function renderContributors() {
   const grid = document.getElementById("contributors-grid");
 
@@ -146,7 +142,7 @@ function renderContributors() {
   });
 }
 
-// Función para animar números
+// Anima un número desde 0 hasta finalNumber
 function animateNumber(element, finalNumber, duration = 2000) {
   let startNumber = 0;
   const increment = finalNumber / (duration / 16);
@@ -161,11 +157,9 @@ function animateNumber(element, finalNumber, duration = 2000) {
   }, 16);
 }
 
-// Función para actualizar estadísticas
+// Actualiza el contador de colaboradores con animación
 function updateStats() {
   const contributorsCount = contributors.length;
-
-  // Animar números cuando sean visibles
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -188,29 +182,20 @@ function updateStats() {
   }
 }
 
-// Función para inicializar colaboradores
 function initializeContributors() {
-  try { renderContributors(); } catch (err) { console.error('Error renderizando colaboradores:', err); }
-  try { updateStats(); } catch (err) { console.warn('Error actualizando estadísticas:', err); }
+  renderContributors();
+  updateStats();
 }
 
-// Inicialización cuando el DOM esté listo
+// Inicialización al cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
-  try {
-    if (window.contributors) {
-      contributors = window.contributors;
+  if (window.contributors) {
+    contributors = window.contributors;
+    initializeContributors();
+  } else {
+    window.addEventListener('contributorsLoaded', () => {
+      contributors = Array.isArray(window.contributors) ? window.contributors : [];
       initializeContributors();
-    } else {
-      window.addEventListener('contributorsLoaded', () => {
-        try {
-          contributors = Array.isArray(window.contributors) ? window.contributors : [];
-          initializeContributors();
-        } catch (err) {
-          console.error('Error al inicializar colaboradores:', err);
-        }
-      });
-    }
-  } catch (err) {
-    console.error('Error en DOMContentLoaded de contributors:', err);
+    });
   }
 });

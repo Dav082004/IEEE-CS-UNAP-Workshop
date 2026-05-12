@@ -1,30 +1,12 @@
-// Script principal para funcionalidades interactivas
 document.addEventListener("DOMContentLoaded", () => {
-  try {
-    initializeApp();
-  } catch (err) {
-    console.error('Error al inicializar la página principal:', err);
-  }
+  setupMobileMenu();
+  setupCardEffects();
+  setupSmoothNavigation();
+  setupTypingEffect();
+  setupBackgroundParticles();
 });
 
-function initializeApp() {
-  // Configurar menú móvil
-  try { setupMobileMenu(); } catch (e) { console.warn('setupMobileMenu:', e); }
-
-  // Configurar efectos de hover en tarjetas
-  try { setupCardEffects(); } catch (e) { console.warn('setupCardEffects:', e); }
-
-  // Configurar navegación suave
-  try { setupSmoothNavigation(); } catch (e) { console.warn('setupSmoothNavigation:', e); }
-
-  // Configurar efectos de typing en el título
-  try { setupTypingEffect(); } catch (e) { console.warn('setupTypingEffect:', e); }
-
-  // Configurar partículas de fondo
-  try { setupBackgroundParticles(); } catch (e) { console.warn('setupBackgroundParticles:', e); }
-}
-
-// Efectos especiales en las tarjetas de colaboradores
+// Efecto 3D en tarjetas al mover el mouse
 function setupCardEffects() {
   document.addEventListener("mousemove", (e) => {
     const cards = document.querySelectorAll(".contributor-card");
@@ -34,11 +16,9 @@ function setupCardEffects() {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      // Solo aplicar efecto si el mouse está sobre la tarjeta
       if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-
         const rotateX = (y - centerY) / 10;
         const rotateY = (centerX - x) / 10;
 
@@ -53,7 +33,6 @@ function setupCardEffects() {
     });
   });
 
-  // Resetear transformación cuando el mouse sale
   document.querySelectorAll(".contributor-card").forEach((card) => {
     card.addEventListener("mouseleave", () => {
       card.style.transform = "";
@@ -61,42 +40,33 @@ function setupCardEffects() {
   });
 }
 
-// Navegación suave mejorada
+// Scroll suave con offset de header
 function setupSmoothNavigation() {
   const navLinks = document.querySelectorAll('a[href^="#"]');
 
   navLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
-
       const targetId = link.getAttribute("href");
       const targetElement = document.querySelector(targetId);
 
       if (targetElement) {
-        // Calcular offset para mejor posicionamiento
         const headerOffset = 80;
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition =
           elementPosition + window.pageYOffset - headerOffset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
 
-        // Agregar efecto de highlight temporal
         targetElement.style.transition = "all 0.3s ease";
         targetElement.style.transform = "scale(1.02)";
-
-        setTimeout(() => {
-          targetElement.style.transform = "";
-        }, 300);
+        setTimeout(() => { targetElement.style.transform = ""; }, 300);
       }
     });
   });
 }
 
-// Efecto de escritura en el título
+// Efecto typewriter en el título
 function setupTypingEffect() {
   const titleElement = document.querySelector(".gradient-text");
   if (!titleElement) return;
@@ -107,8 +77,7 @@ function setupTypingEffect() {
   let i = 0;
   const typeWriter = () => {
     if (i < originalText.length) {
-      titleElement.textContent += originalText.charAt(i);
-      i++;
+      titleElement.textContent += originalText.charAt(i++);
       setTimeout(typeWriter, 45);
     } else {
       const cursor = document.createElement("span");
@@ -118,16 +87,14 @@ function setupTypingEffect() {
       setTimeout(() => cursor.remove(), 2000);
     }
   };
-
   setTimeout(typeWriter, 200);
 }
 
-// Sistema de partículas de fondo sutil
+// Partículas flotantes en el hero
 function setupBackgroundParticles() {
   const hero = document.querySelector(".hero-section");
   if (!hero) return;
 
-  // Crear contenedor de partículas
   const particlesContainer = document.createElement("div");
   particlesContainer.style.cssText = `
         position: absolute;
@@ -141,11 +108,7 @@ function setupBackgroundParticles() {
     `;
 
   hero.appendChild(particlesContainer);
-
-  // Crear partículas
-  for (let i = 0; i < 20; i++) {
-    createParticle(particlesContainer);
-  }
+  for (let i = 0; i < 20; i++) createParticle(particlesContainer);
 }
 
 function createParticle(container) {
@@ -165,7 +128,6 @@ function createParticle(container) {
 
   container.appendChild(particle);
 
-  // Remover partícula después de la animación y crear una nueva
   setTimeout(() => {
     particle.remove();
     createParticle(container);
@@ -217,61 +179,20 @@ const styleSheet = document.createElement("style");
 styleSheet.textContent = additionalStyles;
 document.head.appendChild(styleSheet);
 
-// Configuración del menú móvil
+// Menú móvil
 function setupMobileMenu() {
-  const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-  const headerNav = document.getElementById("headerNav");
-  const mobileOverlay = document.getElementById("mobileOverlay");
+  const toggle  = document.getElementById("mobileMenuToggle");
+  const nav     = document.getElementById("headerNav");
+  const overlay = document.getElementById("mobileOverlay");
 
-  if (!mobileMenuToggle || !headerNav || !mobileOverlay) {
-    console.warn("Elementos del menú móvil no encontrados");
-    return;
-  }
+  if (!toggle || !nav || !overlay) return;
 
-  // Función para alternar el menú
-  function toggleMobileMenu() {
-    const isActive = headerNav.classList.contains("active");
+  const open  = () => { nav.classList.add("active"); overlay.classList.add("active"); toggle.classList.add("active"); document.body.style.overflow = "hidden"; };
+  const close = () => { nav.classList.remove("active"); overlay.classList.remove("active"); toggle.classList.remove("active"); document.body.style.overflow = ""; };
 
-    if (isActive) {
-      // Cerrar menú
-      headerNav.classList.remove("active");
-      mobileOverlay.classList.remove("active");
-      mobileMenuToggle.classList.remove("active");
-      document.body.style.overflow = "";
-    } else {
-      // Abrir menú
-      headerNav.classList.add("active");
-      mobileOverlay.classList.add("active");
-      mobileMenuToggle.classList.add("active");
-      document.body.style.overflow = "hidden"; // Prevenir scroll del body
-    }
-  }
-
-  // Event listeners
-  mobileMenuToggle.addEventListener("click", toggleMobileMenu);
-  mobileOverlay.addEventListener("click", toggleMobileMenu);
-
-  // Cerrar menú al hacer click en los enlaces
-  const navLinks = headerNav.querySelectorAll(".nav-link");
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      if (headerNav.classList.contains("active")) {
-        toggleMobileMenu();
-      }
-    });
-  });
-
-  // Cerrar menú al redimensionar ventana si está abierto
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 768 && headerNav.classList.contains("active")) {
-      toggleMobileMenu();
-    }
-  });
-
-  // Cerrar menú con tecla ESC
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && headerNav.classList.contains("active")) {
-      toggleMobileMenu();
-    }
-  });
+  toggle.addEventListener("click", () => nav.classList.contains("active") ? close() : open());
+  overlay.addEventListener("click", close);
+  nav.querySelectorAll(".nav-link").forEach(l => l.addEventListener("click", close));
+  window.addEventListener("resize", () => { if (window.innerWidth > 768) close(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
 }
