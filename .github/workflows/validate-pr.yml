@@ -1,48 +1,209 @@
 name: ✅ Validate PR
 
-# Se ejecuta solo en Pull Requests que modifican contributors/
+# Se dispara en TODA PR hacia main, sin filtro de paths,
+# para poder detectar si alguien toca archivos fuera de contributors/
 on:
   pull_request:
     branches:
       - main
-    paths:
-      - "contributors/**"
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
-  pull-requests: write
+  pull-requests: write  # para comentar en la PR
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   validate:
-    name: Validate contribution
+    name: 🔍 Validate contribution
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout del PR
+      # 1. Checkout completo del PR
       - name: 📥 Checkout PR
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # 2. Setup de Node.js
       - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "20"
 
-      # 3. Validar archivos JSON
-      - name: ✅ Validate JSON files
-        id: validate
+      # 3. Obtener lista de archivos modificados en esta PR
+      - name: 📋 Get changed files
+        id: changed
         run: |
-          echo "Validando archivos de colaboradores..."
-          
-          # Ejecutar el generador (valida automáticamente)
-          if node scripts/generate-contributors.js; then
-            echo "validation=success" >> $GITHUB_OUTPUT
-            echo "✅ Validación exitosa"
+          # Lista de archivos modificados/añadidos/renombrados en esta PR
+          FILES=$(git diff --name-only --diff-filter=ACMRT origin/${{ github.base_ref }}...HEAD)
+          echo "Lista de archivos modificados:"
+          echo "$FILES"
+          # Guardar en variable de entorno multilínea
+          {
+            echo "files<<EOF"
+            echo "$FILES"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      # 4. Ejecutar el validador
+      - name: ✅ Run contributor validator
+        id: validate
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.files }}
+        run: |
+          set +e
+          node scripts/validate-contributor.js
+          EXIT_CODE=$?
+          set -e
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "result=success" >> $GITHUB_OUTPUT
           else
-            echo "validation=failed" >> $GITHUB_OUTPUT
-            echo "❌ Validación fallida"
+            echo "result=failed" >> $GITHUB_OUTPUT
+          fi
+
+      # 5. Leer el resumen generado por el validador
+      - name: 📖 Read validation summary
+        id: summary
+        if: always()
+        run: |
+          if [ -f validation-summary.json ]; then
+            echo "summary=$(cat validation-summary.json | jq -c '.')" >> $GITHUB_OUTPUT
+          else
+            echo 'summary={"passed":false,"forbiddenFiles":[],"jsonResults":[]}' >> $GITHUB_OUTPUT
+          fi
+
+      # 6. Comentar en la PR con resultado detallado (siempre, éxito o fallo)
+      - name: 💬 Comment PR result
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            let summary;
+            try {
+              summary = JSON.parse(fs.readFileSync('validation-summary.json', 'utf-8'));
+            } catch {
+              summary = { passed: false, forbiddenFiles: [], jsonResults: [] };
+            }
+
+            const changedFiles = `${{ steps.changed.outputs.files }}`.trim().split('\n').filter(Boolean);
+
+            // ── Construir comentario ──────────────────────────────────────
+            let body = '';
+
+            if (summary.passed) {
+              body += `## ✅ Validación exitosa\n\n`;
+              body += `¡Todo está correcto! Tu contribución cumple con todos los requisitos del repositorio.\n\n`;
+            } else {
+              body += `## ❌ Validación fallida\n\n`;
+              body += `Tu PR tiene errores que deben corregirse antes de poder aprobarla. Lee los detalles a continuación.\n\n`;
+            }
+
+            // Archivos modificados
+            body += `### 📁 Archivos modificados en esta PR\n\n`;
+            if (changedFiles.length === 0) {
+              body += `_No se detectaron archivos modificados._\n\n`;
+            } else {
+              changedFiles.forEach(f => {
+                const isContributor = f.startsWith('contributors/');
+                body += `- ${isContributor ? '✅' : '🚫'} \`${f}\`\n`;
+              });
+              body += '\n';
+            }
+
+            // Archivos fuera de contributors/
+            if (summary.forbiddenFiles && summary.forbiddenFiles.length > 0) {
+              body += `### 🚫 Archivos modificados fuera de \`contributors/\`\n\n`;
+              body += `Solo debes crear o modificar archivos dentro de la carpeta \`contributors/\`.\n`;
+              body += `Los siguientes archivos **no están permitidos** en tu PR:\n\n`;
+              summary.forbiddenFiles.forEach(f => {
+                body += `- \`${f}\`\n`;
+              });
+              body += `\n> **¿Qué hacer?** Revierte los cambios en esos archivos. `;
+              body += `Solo tu archivo \`contributors/tu-nickname.json\` debe aparecer en la PR.\n\n`;
+            }
+
+            // Resultados JSON
+            if (summary.jsonResults && summary.jsonResults.length > 0) {
+              body += `### 🔍 Validación de archivos JSON\n\n`;
+              summary.jsonResults.forEach(r => {
+                if (r.errors.length === 0) {
+                  body += `#### ✅ \`${r.file}\`\n`;
+                  body += `Estructura correcta.\n`;
+                } else {
+                  body += `#### ❌ \`${r.file}\`\n`;
+                  body += `**Errores encontrados:**\n\n`;
+                  r.errors.forEach(e => { body += `- ${e}\n`; });
+                }
+                if (r.warnings && r.warnings.length > 0) {
+                  body += `\n**Advertencias:**\n`;
+                  r.warnings.forEach(w => { body += `- ⚠️ ${w}\n`; });
+                }
+                body += '\n';
+              });
+            }
+
+            // Estructura esperada
+            if (!summary.passed) {
+              body += `---\n\n`;
+              body += `### 📋 Estructura correcta del archivo\n\n`;
+              body += "```json\n";
+              body += `{\n`;
+              body += `  "name": "Tu Nombre Completo",\n`;
+              body += `  "nickname": "tu-usuario-github",\n`;
+              body += `  "github": "https://github.com/tu-usuario",\n`;
+              body += `  "linkedin": "https://www.linkedin.com/in/tu-perfil",\n`;
+              body += `  "instagram": "https://www.instagram.com/tu-usuario/",\n`;
+              body += `  "image": "https://github.com/tu-usuario.png",\n`;
+              body += `  "description": "Descripción breve (máx. 200 caracteres)",\n`;
+              body += `  "hobbies": ["Hobby 1", "Hobby 2", "Hobby 3"]\n`;
+              body += `}\n`;
+              body += "```\n\n";
+              body += `> **Campos obligatorios:** \`name\`, \`nickname\`, \`description\`, \`hobbies\`\n`;
+              body += `> **Campos opcionales:** \`github\`, \`linkedin\`, \`instagram\`, \`image\`\n`;
+              body += `> **Máximo:** 4 hobbies · 200 caracteres en description\n\n`;
+              body += `Puedes usar el formulario en [Agregar Perfil](${context.payload.repository.html_url}/blob/main/pages/agregar-contribuidor.html) para generar el JSON correcto.\n`;
+            }
+
+            body += `\n---\n_Validación automática generada por el workflow de IEEE CS UNAP · ${new Date().toISOString().split('T')[0]}_`;
+
+            // Buscar comentario anterior del bot y actualizarlo (no crear duplicados)
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(
+              c => c.user.type === 'Bot' && c.body.includes('Validación automática generada por el workflow')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner:      context.repo.owner,
+                repo:       context.repo.repo,
+                comment_id: botComment.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner:        context.repo.owner,
+                repo:         context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      # 7. Marcar el check como fallido si hubo errores (bloquea el merge)
+      - name: 🚦 Set final status
+        if: always()
+        run: |
+          if [ "${{ steps.validate.outputs.result }}" != "success" ]; then
+            echo "❌ La validación falló. Revisa el comentario en la PR para más detalles."
             exit 1
           fi
+          echo "✅ Todo correcto."
