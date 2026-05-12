@@ -209,12 +209,17 @@ git branch</code></pre>
                     alt="Paso 6: Abrir editor"
                     class="guide-image" />
                 </div>
-                <div class="code-example">
-                  <pre><code># Si usas VS Code
-code .
-
-Puedes encontrar el template en <code>templates/contributor-template.json</code>. Recuerda que JSON no 
-permite comentarios, así que debes quitar las líneas con <code>//</code> del template.</code></pre>
+                <div class="info-box">
+                  <p>
+                    <i class="fas fa-info-circle"></i> Puedes encontrar el template en 
+                    <code>templates/contributor-template.json</code>. Recuerda que JSON no permite 
+                    comentarios, así que debes quitar las líneas con <code>//</code> del template.
+                  </p>
+                </div>
+                <div style="margin-top: var(--spacing-lg);">
+                  <a href="agregar-contribuidor.html" class="minimal-btn primary">
+                    <i class="fas fa-id-card"></i> Generar mi JSON
+                  </a>
                 </div>
               </div>
             </div>
@@ -265,7 +270,7 @@ git push origin feat/new-tu-nickname
                 </p>
                 <div class="step-image">
                   <img
-                    src="../assets/guides-v1/Paso10.png"
+                    src="../assets/guides-v1/Paso8.png"
                     alt="Paso 8: Comparar y PR"
                     class="guide-image" />
                 </div>
@@ -289,7 +294,7 @@ git push origin feat/new-tu-nickname
                 </p>
                 <div class="step-image">
                   <img
-                    src="../assets/guides-v1/Paso11.png"
+                    src="../assets/guides-v1/Paso9.png"
                     alt="Paso 9: Crear PR"
                     class="guide-image" />
                 </div>
@@ -307,7 +312,7 @@ git push origin feat/new-tu-nickname
                 </p>
                 <div class="step-image">
                   <img
-                    src="../assets/guides-v1/Paso11.1.png"
+                    src="../assets/guides-v1/Paso9.1.png"
                     alt="Paso 9.1: Ver cambios en código"
                     class="guide-image" />
                 </div>
@@ -325,7 +330,7 @@ git push origin feat/new-tu-nickname
                 </p>
                 <div class="step-image">
                   <img
-                    src="../assets/guides-v1/Paso12.png"
+                    src="../assets/guides-v1/Paso10.png"
                     alt="Paso 10: PR abierta"
                     class="guide-image" />
                 </div>
@@ -343,7 +348,7 @@ git push origin feat/new-tu-nickname
                 </p>
                 <div class="step-image">
                   <img
-                    src="../assets/guides-v1/Paso13.png"
+                    src="../assets/guides-v1/Paso11.png"
                     alt="Paso 11: Aprobación y merge"
                     class="guide-image" />
                 </div>
@@ -362,7 +367,7 @@ git push origin feat/new-tu-nickname
                 </p>
                 <div class="step-image">
                   <img
-                    src="../assets/guides-v1/Paso14.png"
+                    src="../assets/guides-v1/Paso12.png"
                     alt="Paso 12: Historial de commits"
                     class="guide-image" />
                 </div>
@@ -380,7 +385,7 @@ git push origin feat/new-tu-nickname
                 </p>
                 <div class="step-image">
                   <img
-                    src="../assets/guides-v1/Paso15.png"
+                    src="../assets/guides-v1/Paso13.png"
                     alt="Paso 13: Resultado final"
                     class="guide-image" />
                 </div>
@@ -389,12 +394,12 @@ git push origin feat/new-tu-nickname
                     <i class="fas fa-trophy"></i> ¡Has completado tu primera contribución!
                   </h4>
                   <ul>
-                    <li>âœ… <strong>Fork realizado</strong> correctamente</li>
-                    <li>âœ… <strong>Repositorio clonado</strong> localmente</li>
-                    <li>âœ… <strong>Rama nueva</strong> creada siguiendo GitFlow</li>
-                    <li>âœ… <strong>Cambios</strong> realizados y commitados</li>
-                    <li>âœ… <strong>Pull Request</strong> creado y aprobado</li>
-                    <li>ðŸŽ‰ <strong>¡Apareces en la página!</strong></li>
+                    <li> <strong>Fork realizado</strong> correctamente</li>
+                    <li> <strong>Repositorio clonado</strong> localmente</li>
+                    <li> <strong>Rama nueva</strong> creada siguiendo GitFlow</li>
+                    <li> <strong>Cambios</strong> realizados y commitados</li>
+                    <li> <strong>Pull Request</strong> creado y aprobado</li>
+                    <li> <strong>¡Apareces en la página!</strong></li>
                   </ul>
                 </div>
               </div>
@@ -440,64 +445,6 @@ git push origin feat/new-tu-nickname
                 Si hay errores, recibirás comentarios específicos sobre qué
                 corregir. Puedes hacer nuevos commits para solucionarlos.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sección de ejemplos -->
-      <section class="examples-section">
-        <div class="examples-container">
-          <h2 class="section-title">
-            <i class="fas fa-code"></i>
-            Ejemplos de Contribución
-          </h2>
-          <div class="examples-grid">
-            <div class="example-item">
-              <h3>
-                <i class="fas fa-check-circle" style="color: #10b981"></i>
-                Ejemplo Correcto
-              </h3>
-              <div class="code-example">
-                <pre><code>{
-  name: "Ana María González",
-  nickname: "anagonzalez",
-  github: "https://github.com/anagonzalez",
-  linkedin: "https://linkedin.com/in/ana-gonzalez-dev",
-  description: "Estudiante de Ingeniería de Sistemas especializada en desarrollo web",
-  hobbies: ["Programación", "Lectura", "Yoga", "Fotografía"]
-},</code></pre>
-              </div>
-            </div>
-            <div class="example-item">
-              <h3>
-                <i class="fas fa-times-circle" style="color: #ef4444"></i>
-                Errores Comunes
-              </h3>
-              <div class="error-list">
-                <div class="error-item">
-                  <i class="fas fa-times"></i>
-                  <span>Falta la coma al final del objeto</span>
-                </div>
-                <div class="error-item">
-                  <i class="fas fa-times"></i>
-                  <span>URL de GitHub incompleta o incorrecta</span>
-                </div>
-                <div class="error-item">
-                  <i class="fas fa-times"></i>
-                  <span>Más de 4 hobbies en el array</span>
-                </div>
-                <div class="error-item">
-                  <i class="fas fa-times"></i>
-                  <span
-                    >Descripción demasiado larga (más de 150 caracteres)</span
-                  >
-                </div>
-                <div class="error-item">
-                  <i class="fas fa-times"></i>
-                  <span>Nickname duplicado (ya existe en el sistema)</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
