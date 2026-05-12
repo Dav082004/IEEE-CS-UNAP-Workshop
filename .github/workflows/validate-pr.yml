@@ -27,6 +27,13 @@ jobs:
       - name: 📥 Checkout repo
         uses: actions/checkout@v4
 
+      # 1b. Traer solo la carpeta contributors/ de la PR para poder leer los
+      #     archivos nuevos/modificados. Los scripts siguen siendo de main (seguro).
+      - name: 📥 Fetch contributors/ from PR
+        run: |
+          git fetch https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git ${{ github.event.pull_request.head.sha }}
+          git checkout FETCH_HEAD -- contributors/ 2>/dev/null || true
+
       # 2. Setup de Node.js
       - name: 🔧 Setup Node.js
         uses: actions/setup-node@v4
