@@ -12,8 +12,6 @@ on:
 # Permisos necesarios para hacer commits automáticos
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   generate:
@@ -81,32 +79,3 @@ jobs:
         if: steps.check_changes.outputs.changes == 'false'
         run: |
           echo "ℹ️  No changes detected in contributors data."
-
-  # Job para deploy a GitHub Pages
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: generate
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
-    steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v6
-        with:
-          ref: main
-
-      - name: 🔧 Setup Pages
-        uses: actions/configure-pages@v6
-
-      - name: 📦 Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: '.'
-
-      - name: 🚀 Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
