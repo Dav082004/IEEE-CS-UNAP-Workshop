@@ -71,6 +71,15 @@
   border-radius: var(--border-radius-large);
   overflow: hidden;
 }
+
+/* Panel de vista previa sticky */
+.ac-preview-panel {
+  position: sticky;
+  top: 88px; /* 72px header + 16px gap */
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 .ac-panel-header {
   display: flex; align-items: center; gap: 10px;
   padding: 1rem 1.5rem;
@@ -268,6 +277,25 @@
   box-shadow: var(--glow-primary);
 }
 .ac-btn-download:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.ac-btn-copy {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: var(--border-radius);
+  background: transparent; border: 1px solid rgba(56,189,248,0.4);
+  color: var(--primary); font-size: var(--text-sm); font-weight: 600;
+  cursor: pointer; transition: var(--transition); font-family: inherit;
+}
+.ac-btn-copy:hover { background: rgba(56,189,248,0.1); border-color: var(--primary); }
+.ac-btn-copy.ac-copied { border-color: var(--secondary); color: var(--secondary); background: rgba(68,226,205,0.08); }
+.ac-preview-copy-btn {
+  margin-left: auto;
+  width: 30px; height: 30px; border-radius: var(--border-radius);
+  background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
+  color: var(--primary); cursor: pointer; transition: var(--transition);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; flex-shrink: 0;
+}
+.ac-preview-copy-btn:hover { background: rgba(56,189,248,0.18); }
+.ac-preview-copy-btn.ac-copied { border-color: var(--secondary); color: var(--secondary); background: rgba(68,226,205,0.12); }
 .ac-btn-reset {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 11px 22px; border-radius: var(--border-radius);

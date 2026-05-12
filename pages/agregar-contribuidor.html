@@ -68,10 +68,10 @@
               </div>
             </div>
             <div class="ac-note-item">
-              <i class="fas fa-download"></i>
+              <i class="fas fa-clipboard"></i>
               <div>
-                <strong>¿Qué hago con el archivo?</strong>
-                <p>Lo descargas, lo subes a la carpeta <code>contributors/</code> de tu fork y haces el Pull Request.</p>
+                <strong>¿Qué hago con el JSON?</strong>
+                <p>Copia el JSON, crea el archivo <code>tu-nickname.json</code> en la carpeta <code>contributors/</code> de tu fork y pega el contenido.</p>
               </div>
             </div>
             <div class="ac-note-item">
@@ -207,11 +207,11 @@
                   <span class="ac-error" id="err-hobbies"></span>
                 </div>
 
-                <!-- Botón generar -->
+                <!-- Botón copiar -->
                 <div class="ac-form-actions">
                   <button type="submit" id="generateBtn" class="ac-btn-generate">
-                    <i class="fas fa-wand-magic-sparkles"></i>
-                    Generar mi archivo JSON
+                    <i class="fas fa-copy"></i>
+                    Copiar JSON
                   </button>
                 </div>
 
@@ -245,77 +245,7 @@
 
           </div>
 
-          <!-- Pasos de generación (ocultos hasta que se genera) -->
-          <div class="ac-steps-section" id="stepsSection" aria-live="polite">
-            <div class="ac-steps-title">
-              <i class="fas fa-list-check"></i>
-              Proceso de creación del archivo
-            </div>
-            <div class="ac-steps-list" id="stepsList">
-              <div class="ac-step" data-step="1">
-                <div class="ac-step-icon"><i class="fas fa-clipboard-check"></i></div>
-                <div class="ac-step-content">
-                  <div class="ac-step-title">Validando datos</div>
-                  <div class="ac-step-desc">Verificando que todos los campos obligatorios estén correctos...</div>
-                </div>
-                <div class="ac-step-status"><i class="fas fa-circle-notch fa-spin"></i></div>
-              </div>
-              <div class="ac-step" data-step="2">
-                <div class="ac-step-icon"><i class="fas fa-code"></i></div>
-                <div class="ac-step-content">
-                  <div class="ac-step-title">Generando estructura JSON</div>
-                  <div class="ac-step-desc">Construyendo el objeto con tus datos...</div>
-                </div>
-                <div class="ac-step-status"></div>
-              </div>
-              <div class="ac-step" data-step="3">
-                <div class="ac-step-icon"><i class="fas fa-file-circle-plus"></i></div>
-                <div class="ac-step-content">
-                  <div class="ac-step-title">Creando archivo <span id="step3-filename">tu-nickname.json</span></div>
-                  <div class="ac-step-desc">Preparando el archivo para descarga en <code>contributors/</code>...</div>
-                </div>
-                <div class="ac-step-status"></div>
-              </div>
-              <div class="ac-step" data-step="4">
-                <div class="ac-step-icon"><i class="fas fa-circle-check"></i></div>
-                <div class="ac-step-content">
-                  <div class="ac-step-title">¡Listo!</div>
-                  <div class="ac-step-desc">Tu archivo está listo para descargar y subirlo a tu fork.</div>
-                </div>
-                <div class="ac-step-status"></div>
-              </div>
-            </div>
 
-            <!-- Resultado final -->
-            <div class="ac-result" id="acResult">
-              <div class="ac-result-header">
-                <i class="fas fa-check-circle"></i>
-                <strong>Archivo generado correctamente</strong>
-              </div>
-              <div class="ac-result-filename" id="result-filename">tu-nickname.json</div>
-              <div class="ac-result-actions">
-                <button id="downloadBtn" class="ac-btn-download">
-                  <i class="fas fa-download"></i> Descargar JSON
-                </button>
-                <button id="resetBtn" class="ac-btn-reset">
-                  <i class="fas fa-rotate-left"></i> Crear otro
-                </button>
-              </div>
-              <div class="ac-result-next">
-                <p><strong>¿Qué sigue?</strong></p>
-                <ol>
-                  <li>Descarga el archivo <strong id="next-filename">tu-nickname.json</strong></li>
-                  <li>Súbelo a la carpeta <code>contributors/</code> de tu fork</li>
-                  <li>Haz commit y push de los cambios</li>
-                  <li>Crea un Pull Request al repositorio original</li>
-                </ol>
-                <a href="como-contribuir.html" class="ac-next-link">
-                  <i class="fas fa-book-open"></i>
-                  Ver guía completa de contribución
-                </a>
-              </div>
-            </div>
-          </div>
 
         </div>
       </section>

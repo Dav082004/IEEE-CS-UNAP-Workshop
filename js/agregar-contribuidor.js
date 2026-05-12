@@ -9,7 +9,7 @@
 const MAX_HOBBIES   = 4;
 const MIN_HOBBIES   = 1;
 const MAX_DESC      = 200;
-const STEP_DELAY_MS = 700;
+
 
 // Regex permisivos para usuarios de redes sociales (solo básico)
 const NICKNAME_RE  = /^[a-zA-Z0-9_.\-]{1,40}$/;
@@ -17,9 +17,7 @@ const GITHUB_RE    = /^[a-zA-Z0-9_.\-]{1,60}$/;
 const URL_SAFE_RE  = /^(https?:\/\/)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=%]{1,300}$/;
 
 // ── ESTADO ──────────────────────────────────────────────────────────────────
-let generatedBlob     = null;
-let generatedFilename = 'tu-nickname.json';
-let avatarDebounce    = null;
+let avatarDebounce = null;
 
 // ── INICIALIZACIÓN ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         initHobbies();
         initLivePreview();
         initForm();
-        initDownload();
-        initReset();
     } catch (err) {
         console.error('Error al inicializar la página:', err);
     }
@@ -326,202 +322,39 @@ function initForm() {
     const form = document.getElementById('contributorForm');
     if (!form) return;
 
-    form.addEventListener('submit', async e => {
+    form.addEventListener('submit', e => {
         e.preventDefault();
         if (!validateForm()) return;
 
-        const btn = document.getElementById('generateBtn');
-        if (btn) btn.disabled = true;
+        const btn     = document.getElementById('generateBtn');
+        const data    = getFormData();
+        const json    = buildJSON(data);
+        const jsonStr = JSON.stringify(json, null, 2);
 
-        try {
-            await runGenerationSteps();
-        } catch (err) {
-            console.error('Error al generar el archivo:', err);
-            alert('Ocurrió un error inesperado. Por favor inténtalo de nuevo.');
-            if (btn) btn.disabled = false;
-        }
+        copyToClipboard(jsonStr, btn);
     });
 }
 
-// ── PASOS ANIMADOS ────────────────────────────────────────────────────────────
-async function runGenerationSteps() {
-    const section = document.getElementById('stepsSection');
-    const result  = document.getElementById('acResult');
-    if (!section) return;
+// ── COPIAR AL PORTAPAPELES ────────────────────────────────────────────────────
+function copyToClipboard(text, btn) {
+    if (!text || !text.trim() || !btn) return;
+    const originalHTML = btn.innerHTML;
+    navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('ac-copied');
+        // Mostrar confirmación clara y reemplazar contenido temporalmente
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
 
-    // Mostrar sección
-    section.classList.add('ac-visible');
-    if (result) result.classList.remove('ac-visible');
-
-    // Scroll hacia los pasos
-    setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-
-    // Resetear todos los pasos
-    resetAllSteps();
-
-    // Paso 1: Validar
-    await runStep(1, 'Validando datos',
-        '<i class="fas fa-circle-notch fa-spin"></i>',
-        '<i class="fas fa-check"></i>');
-
-    // Paso 2: Generar estructura
-    await runStep(2, 'Generando estructura JSON',
-        '<i class="fas fa-circle-notch fa-spin"></i>',
-        '<i class="fas fa-check"></i>');
-
-    // Recoger datos y construir JSON real
-    const data      = getFormData();
-    const json      = buildJSON(data);
-    const jsonStr   = JSON.stringify(json, null, 2);
-    const nick      = sanitizeFilename(data.nickname || 'perfil');
-    generatedFilename = nick + '.json';
-
-    // Paso 3: Crear archivo
-    await runStep(3, `Creando ${generatedFilename}`,
-        '<i class="fas fa-circle-notch fa-spin"></i>',
-        '<i class="fas fa-check"></i>');
-
-    // Generar Blob
-    generatedBlob = new Blob([jsonStr], { type: 'application/json; charset=utf-8' });
-
-    // Paso 4: Listo
-    await runStep(4, '¡Archivo listo!',
-        '<i class="fas fa-circle-notch fa-spin"></i>',
-        '<i class="fas fa-check"></i>');
-
-    // Mostrar resultado
-    showResult(generatedFilename);
-}
-
-async function runStep(stepNum, runningTitle, runningStatusHtml, doneStatusHtml) {
-    const step = document.querySelector(`.ac-step[data-step="${stepNum}"]`);
-    if (!step) return;
-
-    // Estado: corriendo
-    step.classList.add('ac-step-running');
-    const titleEl  = step.querySelector('.ac-step-title');
-    const statusEl = step.querySelector('.ac-step-status');
-    if (titleEl)  titleEl.textContent  = runningTitle;
-    if (statusEl) statusEl.innerHTML   = runningStatusHtml;
-
-    await delay(STEP_DELAY_MS);
-
-    // Estado: hecho
-    step.classList.remove('ac-step-running');
-    step.classList.add('ac-step-done');
-    if (statusEl) statusEl.innerHTML = doneStatusHtml;
-}
-
-function resetAllSteps() {
-    document.querySelectorAll('.ac-step').forEach(s => {
-        s.classList.remove('ac-step-running', 'ac-step-done', 'ac-step-error');
-        const status = s.querySelector('.ac-step-status');
-        if (status) status.innerHTML = '';
-    });
-}
-
-function showResult(filename) {
-    const result = document.getElementById('acResult');
-    if (!result) return;
-
-    const fnEls = [
-        document.getElementById('result-filename'),
-        document.getElementById('next-filename'),
-    ];
-    fnEls.forEach(el => { if (el) el.textContent = filename; });
-
-    result.classList.add('ac-visible');
-}
-
-// ── DESCARGA ──────────────────────────────────────────────────────────────────
-function initDownload() {
-    const btn = document.getElementById('downloadBtn');
-    if (!btn) return;
-
-    btn.addEventListener('click', () => {
-        if (!generatedBlob) return;
-
-        try {
-            const url = URL.createObjectURL(generatedBlob);
-            const a   = document.createElement('a');
-            a.href     = url;
-            a.download = generatedFilename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(() => URL.revokeObjectURL(url), 10000);
-        } catch (err) {
-            console.error('Error al descargar el archivo:', err);
-            alert('No se pudo descargar el archivo. Inténtalo de nuevo.');
-        }
-    });
-}
-
-// ── RESET ──────────────────────────────────────────────────────────────────────
-function initReset() {
-    const btn = document.getElementById('resetBtn');
-    if (!btn) return;
-
-    btn.addEventListener('click', () => {
-        generatedBlob     = null;
-        generatedFilename = 'tu-nickname.json';
-
-        // Limpiar formulario
-        const form = document.getElementById('contributorForm');
-        if (form) form.reset();
-
-        // Limpiar errores y clases de validación
-        document.querySelectorAll('.ac-error').forEach(e => e.textContent = '');
-        document.querySelectorAll('.ac-input').forEach(i => {
-            i.classList.remove('ac-valid', 'ac-invalid');
-        });
-
-        // Reiniciar hobbies
-        const container = document.getElementById('hobbiesContainer');
-        if (container) {
-            container.innerHTML = `
-                <div class="ac-hobby-row">
-                    <input type="text" class="ac-input ac-hobby-input" placeholder="Ej: Programación" maxlength="40" />
-                    <button type="button" class="ac-hobby-remove" aria-label="Quitar hobby" style="display:none">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>`;
-        }
-
-        // Reiniciar hints
-        const hintEl    = document.getElementById('hint-filename');
-        const previewEl = document.getElementById('preview-filename');
-        const step3El   = document.getElementById('step3-filename');
-        if (hintEl)    hintEl.textContent    = 'tu-nickname.json';
-        if (previewEl) previewEl.textContent  = 'tu-nickname.json';
-        if (step3El)   step3El.textContent    = 'tu-nickname.json';
-
-        // Reiniciar contador
-        const counter = document.getElementById('desc-count');
-        if (counter) { counter.textContent = '0'; counter.parentElement.classList.remove('ac-over'); }
-
-        // Ocultar sección de pasos y resultado
-        const section = document.getElementById('stepsSection');
-        const result  = document.getElementById('acResult');
-        if (section) section.classList.remove('ac-visible');
-        if (result)  result.classList.remove('ac-visible');
-
-        // Habilitar botón generar
-        const genBtn = document.getElementById('generateBtn');
-        if (genBtn) genBtn.disabled = false;
-
-        // Reiniciar preview
-        updatePreview();
-
-        // Scroll al formulario
-        document.getElementById('contributorForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+            btn.classList.remove('ac-copied');
+            btn.innerHTML = originalHTML;
+        }, 2000);
+    }).catch(err => {
+        console.error('No se pudo copiar:', err);
+        alert('No se pudo copiar. Por favor selecciona el texto manualmente.');
     });
 }
 
 // ── UTILIDADES ─────────────────────────────────────────────────────────────────
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 function sanitizeFilename(str) {
     return str
