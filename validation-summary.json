@@ -1,0 +1,22 @@
+{
+  "forbiddenFiles": [],
+  "jsonResults": [
+    {
+      "file": "contributors\\camila.json",
+      "errors": []
+    },
+    {
+      "file": "contributors\\dav082004.json",
+      "errors": []
+    },
+    {
+      "file": "contributors\\Davidprueba.json",
+      "errors": []
+    },
+    {
+      "file": "contributors\\gilfoy.json",
+      "errors": []
+    }
+  ],
+  "passed": true
+}
