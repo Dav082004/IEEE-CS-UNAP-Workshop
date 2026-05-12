@@ -22,34 +22,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout del merge commit de la PR (base + head combinados)
-      #    Así validamos el resultado final sin correr código del fork directamente.
-      - name: 📥 Checkout PR
+      # 1. Checkout del repo base (main) — con pull_request_target el código
+      #    que corre siempre es del repo base, nunca del fork.
+      - name: 📥 Checkout repo
         uses: actions/checkout@v4
-        with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
-          fetch-depth: 0
 
       # 2. Setup de Node.js
       - name: 🔧 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
-      # 3. Obtener lista de archivos modificados en esta PR
+      # 3. Obtener lista de archivos modificados en esta PR (via API, no git diff)
       - name: 📋 Get changed files
         id: changed
-        run: |
-          # Lista de archivos modificados/añadidos/renombrados en esta PR
-          FILES=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
-          echo "Lista de archivos modificados:"
-          echo "$FILES"
-          # Guardar en variable de entorno multilínea
-          {
-            echo "files<<EOF"
-            echo "$FILES"
-            echo "EOF"
-          } >> $GITHUB_OUTPUT
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              per_page: 100
+            });
+            const fileList = files.map(f => f.filename).join('\n');
+            core.setOutput('files', fileList);
+            console.log('Archivos modificados en esta PR:');
+            console.log(fileList || '(ninguno)');
 
       # 4. Ejecutar el validador
       - name: ✅ Run contributor validator
