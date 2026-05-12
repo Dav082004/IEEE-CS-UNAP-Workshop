@@ -1,17 +1,14 @@
 name: ✅ Validate PR
 
-# pull_request_target corre en el contexto del repo base (tiene permisos
-# de escritura en PRs incluso desde forks), por eso podemos comentar.
-# El checkout usa el merge commit para validar el resultado final.
+# pull_request_target corre en el contexto de main (permisos para comentar en PRs de forks)
 on:
   pull_request_target:
-    branches:
-      - main
+    branches: [main]
     types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
-  pull-requests: write  # para comentar en la PR
+  pull-requests: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -22,26 +19,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout del repo base (main) — con pull_request_target el código
-      #    que corre siempre es del repo base, nunca del fork.
-      - name: 📥 Checkout repo
+      - name: Checkout repo (main)
         uses: actions/checkout@v4
 
-      # 1b. Traer solo la carpeta contributors/ de la PR para poder leer los
-      #     archivos nuevos/modificados. Los scripts siguen siendo de main (seguro).
-      - name: 📥 Fetch contributors/ from PR
+      # Trae solo contributors/ desde el head de la PR (scripts siguen siendo de main)
+      - name: Fetch contributors/ from PR
         run: |
           git fetch https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git ${{ github.event.pull_request.head.sha }}
           git checkout FETCH_HEAD -- contributors/ 2>/dev/null || true
 
-      # 2. Setup de Node.js
-      - name: 🔧 Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24"
 
-      # 3. Obtener lista de archivos modificados en esta PR (via API, no git diff)
-      - name: 📋 Get changed files
+      - name: Get changed files
         id: changed
         uses: actions/github-script@v7
         with:
@@ -55,11 +47,9 @@ jobs:
             });
             const fileList = files.map(f => f.filename).join('\n');
             core.setOutput('files', fileList);
-            console.log('Archivos modificados en esta PR:');
             console.log(fileList || '(ninguno)');
 
-      # 4. Ejecutar el validador
-      - name: ✅ Run contributor validator
+      - name: Run validator
         id: validate
         env:
           CHANGED_FILES: ${{ steps.changed.outputs.files }}
@@ -68,25 +58,9 @@ jobs:
           node scripts/validate-contributor.js
           EXIT_CODE=$?
           set -e
-          if [ $EXIT_CODE -eq 0 ]; then
-            echo "result=success" >> $GITHUB_OUTPUT
-          else
-            echo "result=failed" >> $GITHUB_OUTPUT
-          fi
+          echo "result=$([ $EXIT_CODE -eq 0 ] && echo success || echo failed)" >> $GITHUB_OUTPUT
 
-      # 5. Leer el resumen generado por el validador
-      - name: 📖 Read validation summary
-        id: summary
-        if: always()
-        run: |
-          if [ -f validation-summary.json ]; then
-            echo "summary=$(cat validation-summary.json | jq -c '.')" >> $GITHUB_OUTPUT
-          else
-            echo 'summary={"passed":false,"forbiddenFiles":[],"jsonResults":[]}' >> $GITHUB_OUTPUT
-          fi
-
-      # 6. Comentar en la PR con resultado detallado (siempre, éxito o fallo)
-      - name: 💬 Comment PR result
+      - name: Comment PR result
         if: always()
         uses: actions/github-script@v7
         with:
@@ -101,87 +75,42 @@ jobs:
             }
 
             const changedFiles = `${{ steps.changed.outputs.files }}`.trim().split('\n').filter(Boolean);
+            let body = summary.passed
+              ? `## ✅ Validación exitosa\n\n¡Tu contribución cumple con todos los requisitos!\n\n`
+              : `## ❌ Validación fallida\n\nHay errores que debes corregir antes del merge.\n\n`;
 
-            // ── Construir comentario ──────────────────────────────────────
-            let body = '';
-
-            if (summary.passed) {
-              body += `## ✅ Validación exitosa\n\n`;
-              body += `¡Todo está correcto! Tu contribución cumple con todos los requisitos del repositorio.\n\n`;
-            } else {
-              body += `## ❌ Validación fallida\n\n`;
-              body += `Tu PR tiene errores que deben corregirse antes de poder aprobarla. Lee los detalles a continuación.\n\n`;
-            }
-
-            // Archivos modificados
-            body += `### 📁 Archivos modificados en esta PR\n\n`;
+            body += `### 📁 Archivos modificados\n\n`;
             if (changedFiles.length === 0) {
               body += `_No se detectaron archivos modificados._\n\n`;
             } else {
               changedFiles.forEach(f => {
-                const isContributor = f.startsWith('contributors/');
-                body += `- ${isContributor ? '✅' : '🚫'} \`${f}\`\n`;
+                body += `- ${f.startsWith('contributors/') ? '✅' : '🚫'} \`${f}\`\n`;
               });
               body += '\n';
             }
 
-            // Archivos fuera de contributors/
             if (summary.forbiddenFiles && summary.forbiddenFiles.length > 0) {
-              body += `### 🚫 Archivos modificados fuera de \`contributors/\`\n\n`;
-              body += `Solo debes crear o modificar archivos dentro de la carpeta \`contributors/\`.\n`;
-              body += `Los siguientes archivos **no están permitidos** en tu PR:\n\n`;
-              summary.forbiddenFiles.forEach(f => {
-                body += `- \`${f}\`\n`;
-              });
-              body += `\n> **¿Qué hacer?** Revierte los cambios en esos archivos. `;
-              body += `Solo tu archivo \`contributors/tu-nickname.json\` debe aparecer en la PR.\n\n`;
+              body += `### 🚫 Archivos fuera de \`contributors/\`\n\n`;
+              summary.forbiddenFiles.forEach(f => { body += `- \`${f}\`\n`; });
+              body += `\n> Solo tu archivo \`contributors/tu-nickname.json\` debe aparecer en la PR.\n\n`;
             }
 
-            // Resultados JSON
             if (summary.jsonResults && summary.jsonResults.length > 0) {
-              body += `### 🔍 Validación de archivos JSON\n\n`;
+              body += `### 🔍 Resultados JSON\n\n`;
               summary.jsonResults.forEach(r => {
-                if (r.errors.length === 0) {
-                  body += `#### ✅ \`${r.file}\`\n`;
-                  body += `Estructura correcta.\n`;
-                } else {
-                  body += `#### ❌ \`${r.file}\`\n`;
-                  body += `**Errores encontrados:**\n\n`;
-                  r.errors.forEach(e => { body += `- ${e}\n`; });
-                }
-                if (r.warnings && r.warnings.length > 0) {
-                  body += `\n**Advertencias:**\n`;
-                  r.warnings.forEach(w => { body += `- ⚠️ ${w}\n`; });
-                }
+                body += r.errors.length === 0
+                  ? `#### ✅ \`${r.file}\` — JSON válido\n`
+                  : `#### ❌ \`${r.file}\`\n` + r.errors.map(e => `- ${e}`).join('\n') + '\n';
                 body += '\n';
               });
             }
 
-            // Estructura esperada
             if (!summary.passed) {
-              body += `---\n\n`;
-              body += `### 📋 Estructura correcta del archivo\n\n`;
-              body += "```json\n";
-              body += `{\n`;
-              body += `  "name": "Tu Nombre Completo",\n`;
-              body += `  "nickname": "tu-nickname",\n`;
-              body += `  "github": "https://github.com/tu-usuario",\n`;
-              body += `  "linkedin": "https://linkedin.com/in/tu-perfil",\n`;
-              body += `  "instagram": "https://instagram.com/tu-usuario",\n`;
-              body += `  "image": "https://github.com/tu-usuario.png",\n`;
-              body += `  "description": "Descripción breve",\n`;
-              body += `  "hobbies": ["Hobby 1", "Hobby 2"]\n`;
-              body += `}\n`;
-              body += "```\n\n";
-              body += `> **Campos obligatorios:** \`name\`, \`nickname\`, \`description\`, \`hobbies\`\n`;
-              body += `> **Campos opcionales:** \`github\`, \`linkedin\`, \`instagram\`, \`image\`\n`;
-              body += `> **Máximo:** 4 hobbies en el array\n\n`;
-              body += `Puedes usar el formulario en la web del taller para generar el JSON correcto.\n`;
+              body += `---\n\n### 📋 Estructura esperada\n\n\`\`\`json\n{\n  "name": "Tu Nombre",\n  "nickname": "tu-nickname",\n  "github": "https://github.com/tu-usuario",\n  "linkedin": "https://linkedin.com/in/tu-perfil",\n  "instagram": "https://instagram.com/tu-usuario",\n  "image": "https://github.com/tu-usuario.png",\n  "description": "Descripción breve",\n  "hobbies": ["Hobby 1", "Hobby 2"]\n}\n\`\`\`\n`;
             }
 
             body += `\n---\n_Validación automática generada por el workflow de IEEE CS UNAP · ${new Date().toISOString().split('T')[0]}_`;
 
-            // Buscar comentario anterior del bot y actualizarlo (no crear duplicados)
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo:  context.repo.repo,
@@ -194,22 +123,17 @@ jobs:
 
             if (botComment) {
               await github.rest.issues.updateComment({
-                owner:      context.repo.owner,
-                repo:       context.repo.repo,
-                comment_id: botComment.id,
-                body,
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: botComment.id, body,
               });
             } else {
               await github.rest.issues.createComment({
-                owner:        context.repo.owner,
-                repo:         context.repo.repo,
-                issue_number: context.issue.number,
-                body,
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.issue.number, body,
               });
             }
 
-      # 7. Marcar el check como fallido si hubo errores (bloquea el merge)
-      - name: 🚦 Set final status
+      - name: Set final status
         if: always()
         run: |
           if [ "${{ steps.validate.outputs.result }}" != "success" ]; then
