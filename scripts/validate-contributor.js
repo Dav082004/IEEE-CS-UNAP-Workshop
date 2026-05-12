@@ -1,11 +1,13 @@
 // ============================================================================
 // 🔍 VALIDADOR DE PR — IEEE CS UNAP
 // ============================================================================
-// Valida que la PR solo modifique archivos en contributors/ y que cada JSON
-// tenga la estructura correcta.
+// Valida que la PR solo modifique archivos .json en contributors/ y que cada
+// archivo tenga la estructura correcta (tipos de dato, hobbies 1-4).
+// No valida el contenido (URLs, longitudes, formatos, etc.).
 //
-// Uso: node scripts/validate-contributor.js [archivo1.json ...]
-// Si no se pasan argumentos, valida todos los archivos en contributors/
+// Uso: node scripts/validate-contributor.js
+// Los archivos a validar se reciben por la env var CHANGED_FILES o se validan
+// todos los de contributors/ si se ejecuta en local.
 // ============================================================================
 
 'use strict';
@@ -13,29 +15,173 @@
 const fs   = require('fs');
 const path = require('path');
 
-// ── REGLAS DE VALIDACIÓN ─────────────────────────────────────────────────────
-const REQUIRED_FIELDS  = ['name', 'nickname', 'description', 'hobbies'];
-const MAX_HOBBIES      = 4;
-const MIN_HOBBIES      = 1;
-const MAX_DESC_LEN     = 200;
-const MAX_NAME_LEN     = 80;
-const MAX_NICK_LEN     = 40;
-const NICKNAME_RE      = /^[a-zA-Z0-9_.\-]{1,40}$/;
-const GITHUB_URL_RE    = /^https:\/\/github\.com\/[a-zA-Z0-9_.\-]+$/;
-const LINKEDIN_URL_RE  = /^https:\/\/(www\.)?linkedin\.com\/in\/.+$/;
-const INSTAGRAM_URL_RE = /^https:\/\/(www\.)?instagram\.com\/.+\/$/;
-const URL_RE           = /^https?:\/\/.+/;
-
 // ── COLORES ───────────────────────────────────────────────────────────────────
 const c = {
-  reset:   '\x1b[0m',
-  red:     '\x1b[31m',
-  green:   '\x1b[32m',
-  yellow:  '\x1b[33m',
-  blue:    '\x1b[34m',
-  cyan:    '\x1b[36m',
-  bold:    '\x1b[1m',
+  reset:  '\x1b[0m',
+  red:    '\x1b[31m',
+  green:  '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue:   '\x1b[34m',
+  cyan:   '\x1b[36m',
+  bold:   '\x1b[1m',
 };
+
+// ── VALIDADOR ─────────────────────────────────────────────────────────────────
+// Solo verifica que los campos tengan el tipo correcto y que hobbies sea un
+// array de entre 1 y 4 elementos. No valida contenido ni formatos.
+function validateContributor(data) {
+  const errors = [];
+
+  // Campos obligatorios: deben existir y ser strings no vacíos
+  const requiredStrings = ['name', 'nickname', 'description'];
+  for (const field of requiredStrings) {
+    if (typeof data[field] !== 'string' || data[field].trim() === '') {
+      errors.push(`El campo \`${field}\` es obligatorio y debe ser texto`);
+    }
+  }
+
+  // Campos opcionales: si existen deben ser strings
+  const optionalStrings = ['github', 'linkedin', 'instagram', 'image'];
+  for (const field of optionalStrings) {
+    if (data[field] !== undefined && typeof data[field] !== 'string') {
+      errors.push(`El campo \`${field}\` debe ser texto`);
+    }
+  }
+
+  // hobbies: array con entre 1 y 4 elementos string
+  if (!Array.isArray(data.hobbies)) {
+    errors.push('`hobbies` debe ser un array. Ejemplo: `["Programación", "Gaming"]`');
+  } else {
+    if (data.hobbies.length < 1) {
+      errors.push('`hobbies` debe tener al menos 1 elemento');
+    }
+    if (data.hobbies.length > 4) {
+      errors.push(`\`hobbies\` tiene ${data.hobbies.length} elementos. El máximo permitido es 4`);
+    }
+    data.hobbies.forEach((h, i) => {
+      if (typeof h !== 'string') {
+        errors.push(`\`hobbies[${i}]\` debe ser texto`);
+      }
+    });
+  }
+
+  return errors;
+}
+
+// ── ARCHIVOS A VALIDAR ────────────────────────────────────────────────────────
+function getChangedFiles() {
+  const envFiles = process.env.CHANGED_FILES;
+  if (envFiles) return envFiles.split('\n').filter(Boolean);
+  return [];
+}
+
+// ── MAIN ──────────────────────────────────────────────────────────────────────
+function main() {
+  console.log(`\n${c.cyan}${c.bold}${'═'.repeat(60)}${c.reset}`);
+  console.log(`${c.cyan}${c.bold}  🔍 VALIDADOR DE CONTRIBUCIONES — IEEE CS UNAP${c.reset}`);
+  console.log(`${c.cyan}${c.bold}${'═'.repeat(60)}${c.reset}\n`);
+
+  const changedFiles    = getChangedFiles();
+  const contributorsDir = path.join(__dirname, '..', 'contributors');
+
+  // ── 1. Detectar archivos fuera de contributors/ ──────────────────────────
+  const forbiddenFiles = changedFiles.filter(f => {
+    const norm = f.replace(/\\/g, '/');
+    return !norm.startsWith('contributors/');
+  });
+
+  const summary = { passed: true, forbiddenFiles, jsonResults: [] };
+
+  if (forbiddenFiles.length > 0) {
+    summary.passed = false;
+    console.log(`${c.red}${c.bold}⛔  ARCHIVOS FUERA DE contributors/${c.reset}\n`);
+    forbiddenFiles.forEach(f => console.log(`   ${c.red}• ${f}${c.reset}`));
+    console.log();
+  } else {
+    console.log(`${c.green}✅ Todos los archivos modificados están en contributors/${c.reset}\n`);
+  }
+
+  // ── 2. Verificar que los archivos en contributors/ sean .json ────────────
+  const nonJsonInContributors = changedFiles.filter(f => {
+    const norm = f.replace(/\\/g, '/');
+    return norm.startsWith('contributors/') && !norm.endsWith('.json');
+  });
+
+  if (nonJsonInContributors.length > 0) {
+    summary.passed = false;
+    console.log(`${c.red}${c.bold}⛔  ARCHIVOS QUE NO SON .json EN contributors/${c.reset}\n`);
+    nonJsonInContributors.forEach(f => console.log(`   ${c.red}• ${f}${c.reset}`));
+    console.log(`\n   ${c.yellow}Solo se permiten archivos .json en contributors/${c.reset}\n`);
+  }
+
+  // ── 3. Determinar qué JSON validar ───────────────────────────────────────
+  let prJsonFiles = changedFiles.filter(f => {
+    const norm = f.replace(/\\/g, '/');
+    return norm.startsWith('contributors/') && norm.endsWith('.json');
+  });
+
+  // Modo local (sin CHANGED_FILES): validar todos
+  if (changedFiles.length === 0) {
+    prJsonFiles = fs.readdirSync(contributorsDir)
+      .filter(f => f.endsWith('.json'))
+      .map(f => path.join('contributors', f));
+  }
+
+  if (prJsonFiles.length === 0) {
+    console.log(`${c.yellow}⚠️  No hay archivos .json en contributors/ para validar.${c.reset}\n`);
+  }
+
+  // ── 4. Validar estructura de cada JSON ───────────────────────────────────
+  prJsonFiles.forEach(relPath => {
+    const absPath = path.join(__dirname, '..', relPath);
+    console.log(`${c.blue}🔎 Validando: ${relPath}${c.reset}`);
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(absPath, 'utf-8'));
+    } catch (err) {
+      const msg = `Sintaxis JSON inválida: ${err.message}`;
+      console.log(`   ${c.red}✗ ${msg}${c.reset}\n`);
+      summary.jsonResults.push({ file: relPath, errors: [msg] });
+      summary.passed = false;
+      return;
+    }
+
+    const errors = validateContributor(parsed);
+
+    if (errors.length === 0) {
+      console.log(`   ${c.green}✓ Estructura correcta${c.reset}\n`);
+    } else {
+      summary.passed = false;
+      errors.forEach(e => console.log(`   ${c.red}✗ ${e}${c.reset}`));
+      console.log();
+    }
+
+    summary.jsonResults.push({ file: relPath, errors });
+  });
+
+  // ── 5. Escribir resumen para el workflow ─────────────────────────────────
+  fs.writeFileSync(
+    path.join(__dirname, '..', 'validation-summary.json'),
+    JSON.stringify(summary, null, 2),
+    'utf-8'
+  );
+
+  // ── 6. Resultado final ────────────────────────────────────────────────────
+  console.log(`${c.cyan}${'═'.repeat(60)}${c.reset}`);
+  if (summary.passed) {
+    console.log(`${c.green}${c.bold}  ✅ VALIDACIÓN EXITOSA${c.reset}`);
+    console.log(`${c.cyan}${'═'.repeat(60)}${c.reset}\n`);
+    process.exit(0);
+  } else {
+    console.log(`${c.red}${c.bold}  ❌ VALIDACIÓN FALLIDA — revisa los errores arriba${c.reset}`);
+    console.log(`${c.cyan}${'═'.repeat(60)}${c.reset}\n`);
+    process.exit(1);
+  }
+}
+
+main();
+
 
 // ── VALIDADOR PRINCIPAL ───────────────────────────────────────────────────────
 function validateContributor(data, filename) {

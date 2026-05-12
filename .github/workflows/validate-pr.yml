@@ -154,19 +154,19 @@ jobs:
               body += "```json\n";
               body += `{\n`;
               body += `  "name": "Tu Nombre Completo",\n`;
-              body += `  "nickname": "tu-usuario-github",\n`;
+              body += `  "nickname": "tu-nickname",\n`;
               body += `  "github": "https://github.com/tu-usuario",\n`;
-              body += `  "linkedin": "https://www.linkedin.com/in/tu-perfil",\n`;
-              body += `  "instagram": "https://www.instagram.com/tu-usuario/",\n`;
+              body += `  "linkedin": "https://linkedin.com/in/tu-perfil",\n`;
+              body += `  "instagram": "https://instagram.com/tu-usuario",\n`;
               body += `  "image": "https://github.com/tu-usuario.png",\n`;
-              body += `  "description": "Descripción breve (máx. 200 caracteres)",\n`;
-              body += `  "hobbies": ["Hobby 1", "Hobby 2", "Hobby 3"]\n`;
+              body += `  "description": "Descripción breve",\n`;
+              body += `  "hobbies": ["Hobby 1", "Hobby 2"]\n`;
               body += `}\n`;
               body += "```\n\n";
               body += `> **Campos obligatorios:** \`name\`, \`nickname\`, \`description\`, \`hobbies\`\n`;
               body += `> **Campos opcionales:** \`github\`, \`linkedin\`, \`instagram\`, \`image\`\n`;
-              body += `> **Máximo:** 4 hobbies · 200 caracteres en description\n\n`;
-              body += `Puedes usar el formulario en [Agregar Perfil](${context.payload.repository.html_url}/blob/main/pages/agregar-contribuidor.html) para generar el JSON correcto.\n`;
+              body += `> **Máximo:** 4 hobbies en el array\n\n`;
+              body += `Puedes usar el formulario en la web del taller para generar el JSON correcto.\n`;
             }
 
             body += `\n---\n_Validación automática generada por el workflow de IEEE CS UNAP · ${new Date().toISOString().split('T')[0]}_`;
