@@ -1,12 +1,32 @@
 // ============================================================================
-// 🔧 FUNCIONES PARA RENDERIZAR COLABORADORES
-// ============================================================================
-// Este archivo contiene toda la lógica para mostrar las tarjetas de colaboradores
+// FUNCIONES PARA RENDERIZAR COLABORADORES
 // Los datos se cargan desde public/index.json
 // ============================================================================
 
 // Variable global para los colaboradores (se carga desde index.json)
 let contributors = [];
+
+// Escapa caracteres HTML para prevenir XSS
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Valida que una URL sea http/https (previene javascript: XSS)
+function safeUrl(url) {
+  if (!url) return '#';
+  try {
+    const parsed = new URL(url);
+    return (parsed.protocol === 'http:' || parsed.protocol === 'https:') ? url : '#';
+  } catch {
+    return '#';
+  }
+}
 
 // Función para obtener las iniciales del nombre
 function getInitials(name) {
@@ -57,65 +77,70 @@ function renderContributors() {
     const initials = getInitials(contributor.name);
     const avatarColor = getColorFromName(contributor.name);
 
-    // Determinar la imagen a usar
-    let avatarHTML = "";
+    // Avatar: construido por DOM para mantener event listeners
+    let avatarNode;
+    let imgSrc = '';
     if (contributor.image) {
-      // Si tiene imagen personalizada, usarla
-      avatarHTML = `
-        <img src="${contributor.image}" alt="${contributor.name}" class="w-24 h-24 rounded-full mx-auto object-cover" style="margin-bottom: 1rem; display: block;" onerror="this.outerHTML='<div class=&quot;contributor-avatar&quot; style=&quot;background: ${avatarColor}&quot;>${initials}</div>'">`;
+      imgSrc = safeUrl(contributor.image);
     } else if (contributor.github) {
-      // Si tiene GitHub, usar el avatar automáticamente
-      const githubUsername = contributor.github.split("/").pop();
-      avatarHTML = `
-        <img src="https://github.com/${githubUsername}.png" alt="${contributor.name}" class="w-24 h-24 rounded-full mx-auto object-cover" style="margin-bottom: 1rem; display: block;" onerror="this.outerHTML='<div class=&quot;contributor-avatar&quot; style=&quot;background: ${avatarColor}&quot;>${initials}</div>'">`;
-    } else {
-      // Si no tiene imagen ni GitHub, usar iniciales
-      avatarHTML = `
-        <div class="contributor-avatar" style="background: ${avatarColor}">
-          ${initials}
-        </div>`;
+      const githubUsername = contributor.github.split('/').pop();
+      imgSrc = `https://github.com/${encodeURIComponent(githubUsername)}.png`;
     }
 
-    const hobbiesHTML = contributor.hobbies
-      .slice(0, 4) // Máximo 4 hobbies
-      .map((hobby) => `<span class="hobby-tag">${hobby}</span>`)
-      .join("");
+    if (imgSrc) {
+      const img = document.createElement('img');
+      img.src = imgSrc;
+      img.alt = contributor.name;
+      img.className = 'contributor-avatar-img';
+      img.addEventListener('error', () => {
+        const fallback = document.createElement('div');
+        fallback.className = 'contributor-avatar';
+        fallback.style.background = avatarColor;
+        fallback.textContent = initials;
+        img.replaceWith(fallback);
+      });
+      avatarNode = img;
+    } else {
+      const fallback = document.createElement('div');
+      fallback.className = 'contributor-avatar';
+      fallback.style.background = avatarColor;
+      fallback.textContent = initials;
+      avatarNode = fallback;
+    }
 
-    const linkedinHTML = contributor.linkedin
-      ? `<a href="${contributor.linkedin}" target="_blank" class="contributor-social-link linkedin">
-                <i class="fab fa-linkedin"></i>
-                LinkedIn
-               </a>`
-      : "";
+    const safeHobbies = (contributor.hobbies || [])
+      .slice(0, 4)
+      .map((hobby) => `<span class="hobby-tag">${escapeHtml(hobby)}</span>`)
+      .join('');
 
     const githubHTML = contributor.github
-      ? `<a href="${contributor.github}" target="_blank" class="contributor-social-link github">
-                <i class="fab fa-github"></i>
-                GitHub
-               </a>`
-      : "";
+      ? `<a href="${escapeHtml(safeUrl(contributor.github))}" target="_blank" rel="noopener noreferrer" class="contributor-social-link github">
+           <i class="fab fa-github"></i> GitHub
+         </a>`
+      : '';
 
-    const socialLinksHTML = `
-      ${githubHTML}
-      ${linkedinHTML}
-      ${contributor.instagram ? `<a href="${contributor.instagram}" target="_blank" class="contributor-social-link instagram" style="margin-top:6px"><i class="fab fa-instagram" style="color: #E1306C;"></i> Instagram</a>` : ""}
-    `;
+    const linkedinHTML = contributor.linkedin
+      ? `<a href="${escapeHtml(safeUrl(contributor.linkedin))}" target="_blank" rel="noopener noreferrer" class="contributor-social-link linkedin">
+           <i class="fab fa-linkedin"></i> LinkedIn
+         </a>`
+      : '';
+
+    const instagramHTML = contributor.instagram
+      ? `<a href="${escapeHtml(safeUrl(contributor.instagram))}" target="_blank" rel="noopener noreferrer" class="contributor-social-link instagram">
+           <i class="fab fa-instagram"></i> Instagram
+         </a>`
+      : '';
 
     card.innerHTML = `
-            ${avatarHTML}
-            <div class="contributor-name">${contributor.name}</div>
-            <div class="contributor-nickname">@${contributor.nickname}</div>
-            <div class="contributor-description">${
-              contributor.description ||
-              "Desarrollador apasionado por la tecnología"
-            }</div>
-            <div class="contributor-hobbies">
-                ${hobbiesHTML}
-            </div>
-            <div class="contributor-social-links">
-                ${socialLinksHTML}
-            </div>
-        `;
+      <div class="contributor-name">${escapeHtml(contributor.name)}</div>
+      <div class="contributor-nickname">@${escapeHtml(contributor.nickname)}</div>
+      <div class="contributor-description">${escapeHtml(contributor.description) || 'Desarrollador apasionado por la tecnología'}</div>
+      <div class="contributor-hobbies">${safeHobbies}</div>
+      <div class="contributor-social-links">${githubHTML}${linkedinHTML}${instagramHTML}</div>
+    `;
+
+    // Insertar el avatar al principio (con su event listener intacto)
+    card.insertBefore(avatarNode, card.firstChild);
 
     grid.appendChild(card);
   });
@@ -163,97 +188,15 @@ function updateStats() {
   }
 }
 
-// Función para suavizar el scroll
-function smoothScroll() {
-  const links = document.querySelectorAll('a[href^="#"]');
-
-  links.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      const targetId = link.getAttribute("href");
-      const targetElement = document.querySelector(targetId);
-
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
-    });
-  });
-}
-
-// Función para añadir animaciones en scroll
-function addScrollAnimations() {
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: "0px 0px -50px 0px",
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.style.animation = "fadeInUp 0.8s ease forwards";
-      }
-    });
-  }, observerOptions);
-
-  // Observar elementos que queremos animar
-  const elementsToAnimate = document.querySelectorAll(
-    ".contributor-card, .step, .stat-item"
-  );
-
-  elementsToAnimate.forEach((el) => {
-    el.style.opacity = "0";
-    el.style.transform = "translateY(30px)";
-    observer.observe(el);
-  });
-}
-
-// Función para validar los datos de contribuidores
-function validateContributors() {
-  const errors = [];
-
-  contributors.forEach((contributor, index) => {
-    if (!contributor.name || contributor.name.trim() === "") {
-      errors.push(`Colaborador ${index + 1}: El nombre es requerido`);
-    }
-
-    if (!contributor.nickname || contributor.nickname.trim() === "") {
-      errors.push(`Colaborador ${index + 1}: El nickname es requerido`);
-    }
-
-    if (
-      !Array.isArray(contributor.hobbies) ||
-      contributor.hobbies.length === 0
-    ) {
-      errors.push(`Colaborador ${index + 1}: Debe tener al menos un hobby`);
-    }
-
-    if (contributor.hobbies && contributor.hobbies.length > 4) {
-      errors.push(`Colaborador ${index + 1}: Máximo 4 hobbies permitidos`);
-    }
-
-    if (
-      contributor.linkedin &&
-      !contributor.linkedin.includes("linkedin.com")
-    ) {
-      errors.push(`Colaborador ${index + 1}: URL de LinkedIn inválida`);
-    }
-  });
-
-  if (errors.length > 0) {
-    console.warn("Errores en datos de colaboradores:", errors);
-  }
-
-  return errors.length === 0;
+// Función para inicializar colaboradores
+function initializeContributors() {
+  try { renderContributors(); } catch (err) { console.error('Error renderizando colaboradores:', err); }
+  try { updateStats(); } catch (err) { console.warn('Error actualizando estadísticas:', err); }
 }
 
 // Inicialización cuando el DOM esté listo
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   try {
-    // Esperar a que se carguen los colaboradores
     if (window.contributors) {
       contributors = window.contributors;
       initializeContributors();
@@ -271,22 +214,3 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error('Error en DOMContentLoaded de contributors:', err);
   }
 });
-
-// Función para inicializar colaboradores
-function initializeContributors() {
-  try { validateContributors(); } catch (err) { console.warn('Error validando colaboradores:', err); }
-  try { renderContributors(); } catch (err) { console.error('Error renderizando colaboradores:', err); }
-  try { updateStats(); } catch (err) { console.warn('Error actualizando estadísticas:', err); }
-  try { smoothScroll(); } catch (err) { console.warn('Error en smoothScroll:', err); }
-  try { setTimeout(addScrollAnimations, 500); } catch (err) { console.warn('Error en animaciones:', err); }
-}
-
-// Exportar funciones para testing (si es necesario)
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    contributors,
-    getInitials,
-    getColorFromName,
-    validateContributors,
-  };
-}

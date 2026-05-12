@@ -297,7 +297,7 @@
 }
 
 .contributor-avatar img,
-.contributor-card img.rounded-full {
+.contributor-card .contributor-avatar-img {
   width: 88px !important;
   height: 88px !important;
   border-radius: var(--border-radius-full) !important;
@@ -309,7 +309,7 @@
   transition: var(--transition);
 }
 
-.contributor-card:hover img.rounded-full {
+.contributor-card:hover .contributor-avatar-img {
   border-color: var(--primary) !important;
   box-shadow: var(--glow-primary);
 }
@@ -418,13 +418,6 @@
   color: #fff;
   border-color: #e6683c;
 }
-
-/* Tailwind-like utilities for JS-generated markup */
-.w-24 { width: 88px; }
-.h-24 { height: 88px; }
-.rounded-full { border-radius: 50%; }
-.mx-auto { margin-left: auto; margin-right: auto; }
-.object-cover { object-fit: cover; }
 
 /* ANIMATIONS */
 @keyframes fadeInUp {

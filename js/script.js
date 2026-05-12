@@ -11,36 +11,17 @@ function initializeApp() {
   // Configurar menú móvil
   try { setupMobileMenu(); } catch (e) { console.warn('setupMobileMenu:', e); }
 
-  // Configurar efectos de parallax
-  try { setupParallaxEffects(); } catch (e) { console.warn('setupParallaxEffects:', e); }
-
   // Configurar efectos de hover en tarjetas
   try { setupCardEffects(); } catch (e) { console.warn('setupCardEffects:', e); }
 
   // Configurar navegación suave
   try { setupSmoothNavigation(); } catch (e) { console.warn('setupSmoothNavigation:', e); }
 
-  // Inicializar contadores animados
-  try { initializeCounters(); } catch (e) { console.warn('initializeCounters:', e); }
-
   // Configurar efectos de typing en el título
   try { setupTypingEffect(); } catch (e) { console.warn('setupTypingEffect:', e); }
 
   // Configurar partículas de fondo
   try { setupBackgroundParticles(); } catch (e) { console.warn('setupBackgroundParticles:', e); }
-}
-
-// Efectos de parallax suaves
-function setupParallaxEffects() {
-  window.addEventListener("scroll", () => {
-    const scrolled = window.pageYOffset;
-    const parallaxElements = document.querySelectorAll(".floating-icons");
-
-    parallaxElements.forEach((element) => {
-      const speed = 0.5;
-      element.style.transform = `translateY(${scrolled * speed}px)`;
-    });
-  });
 }
 
 // Efectos especiales en las tarjetas de colaboradores
@@ -115,47 +96,6 @@ function setupSmoothNavigation() {
   });
 }
 
-// Contadores animados mejorados
-function initializeCounters() {
-  const counters = document.querySelectorAll(".stat-number");
-  const options = {
-    threshold: 0.5,
-    rootMargin: "0px 0px -100px 0px",
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && !entry.target.dataset.counted) {
-        animateCounter(entry.target);
-        entry.target.dataset.counted = "true";
-      }
-    });
-  }, options);
-
-  counters.forEach((counter) => observer.observe(counter));
-}
-
-function animateCounter(element) {
-  const target = parseInt(
-    element.id.includes("contributors")
-      ? contributors.length
-      : element.id.includes("commits")
-      ? contributors.length * 2
-      : Math.min(contributors.length, 8)
-  );
-
-  let current = 0;
-  const increment = target / 50;
-  const timer = setInterval(() => {
-    current += increment;
-    if (current >= target) {
-      current = target;
-      clearInterval(timer);
-    }
-    element.textContent = Math.floor(current);
-  }, 40);
-}
-
 // Efecto de escritura en el título
 function setupTypingEffect() {
   const titleElement = document.querySelector(".gradient-text");
@@ -169,26 +109,22 @@ function setupTypingEffect() {
     if (i < originalText.length) {
       titleElement.textContent += originalText.charAt(i);
       i++;
-      setTimeout(typeWriter, 100);
+      setTimeout(typeWriter, 45);
     } else {
-      // Agregar cursor parpadeante temporal
       const cursor = document.createElement("span");
       cursor.textContent = "|";
       cursor.style.animation = "blink 1s infinite";
       titleElement.appendChild(cursor);
-
-      // Remover cursor después de 3 segundos
-      setTimeout(() => cursor.remove(), 3000);
+      setTimeout(() => cursor.remove(), 2000);
     }
   };
 
-  // Iniciar efecto después de un pequeño delay
-  setTimeout(typeWriter, 1000);
+  setTimeout(typeWriter, 200);
 }
 
 // Sistema de partículas de fondo sutil
 function setupBackgroundParticles() {
-  const hero = document.querySelector(".hero");
+  const hero = document.querySelector(".hero-section");
   if (!hero) return;
 
   // Crear contenedor de partículas
