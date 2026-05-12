@@ -109,8 +109,6 @@ jobs:
               body += `---\n\n### 📋 Estructura esperada\n\n\`\`\`json\n{\n  "name": "Tu Nombre",\n  "nickname": "tu-nickname",\n  "github": "https://github.com/tu-usuario",\n  "linkedin": "https://linkedin.com/in/tu-perfil",\n  "instagram": "https://instagram.com/tu-usuario",\n  "image": "https://github.com/tu-usuario.png",\n  "description": "Descripción breve",\n  "hobbies": ["Hobby 1", "Hobby 2"]\n}\n\`\`\`\n`;
             }
 
-            body += `\n---\n_Validación automática generada por el workflow de IEEE CS UNAP · ${new Date().toISOString().split('T')[0]}_`;
-
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo:  context.repo.repo,
