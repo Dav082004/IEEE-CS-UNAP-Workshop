@@ -28,6 +28,19 @@
     ]
   },
   {
+    "name": "Cristian Junior Cunurana Calderon",
+    "nickname": "cjelgamer",
+    "github": "https://github.com/cjelgamer",
+    "linkedin": "https://www.linkedin.com/in/cristian-junior-cunurana-calderon-201462383",
+    "image": "https://github.com/cjelgamer.png",
+    "description": "Networking and Cibersecurity",
+    "hobbies": [
+      "Leer",
+      "Pasear",
+      "Dormir"
+    ]
+  },
+  {
     "name": "Pepito Pepe",
     "nickname": "Dav082004",
     "github": "https://github.com/Dav082004",
@@ -77,6 +90,19 @@
       "Hobby2",
       "Hobby3",
       "Hobby4"
+    ]
+  },
+  {
+    "name": "Miguel Angel Llusca Surco",
+    "nickname": "MiguelwLD",
+    "github": "https://github.com/https://github.com/Miguel7293",
+    "linkedin": "https://www.linkedin.com/in/https://www.linkedin.com/in/miguel-angel-llusca-surco/",
+    "image": "https://github.com/https://github.com/Miguel7293.png",
+    "description": "Hola, quiero mi polito :v",
+    "hobbies": [
+      "Programar",
+      "Resolver problemas en HackTheBox",
+      "Escuchar Musica"
     ]
   },
   {
