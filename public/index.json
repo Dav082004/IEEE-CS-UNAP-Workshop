@@ -1,5 +1,17 @@
 [
   {
+    "name": "Abad Poma",
+    "nickname": "Abadprueba",
+    "github": "https://github.com/Abad-cyber",
+    "image": "https://github.com/Abad-cyber.png",
+    "description": "apasionado en la ciberseguridad",
+    "hobbies": [
+      "programacion",
+      "ciberseguridad",
+      "gaming"
+    ]
+  },
+  {
     "name": "Jorge Guillermo Olarte Quispe",
     "nickname": "ArtStyle19",
     "github": "https://github.com/ArtStyle19",
@@ -10,6 +22,38 @@
     "hobbies": [
       "Coding",
       "Gaming"
+    ]
+  },
+  {
+    "name": "Cristian Augusto",
+    "nickname": "Augusto",
+    "github": "https://github.com/Augusto-ox",
+    "image": "https://github.com/Augusto-ox.png",
+    "description": "University student apasionado por C++",
+    "hobbies": [
+      "gaming",
+      "Reading",
+      "dibujar"
+    ]
+  },
+  {
+    "name": "Brayan Luis Calderon Calderon",
+    "nickname": "BCa-209",
+    "github": "https://github.com/BCa-209",
+    "image": "https://github.com/BCa-209.png",
+    "description": "holaa",
+    "hobbies": [
+      "Leer"
+    ]
+  },
+  {
+    "name": "BRAYAM VICTOR RAMIREZ VIDAL",
+    "nickname": "BraVicRV",
+    "github": "https://github.com/BraVicRV",
+    "image": "https://github.com/BraVicRV.png",
+    "description": "lo intente XD",
+    "hobbies": [
+      "desarrollador frontend, algo de backend"
     ]
   },
   {
@@ -25,6 +69,20 @@
       "Cantar",
       "Aprender de tech  y minería",
       "Competir"
+    ]
+  },
+  {
+    "name": "Carlos David",
+    "nickname": "carlos5845",
+    "github": "https://github.com/carlos5845",
+    "linkedin": "www.linkedin.com/in/carlos-david-david-109b642b6",
+    "instagram": "https://instagram.com/carlos_deiw",
+    "image": "https://github.com/tu-usuario.png",
+    "description": "Soy estudiante de ingenieria de sistemas , apasionado por el frontend UwU",
+    "hobbies": [
+      "Jugar",
+      "dormir",
+      "comer"
     ]
   },
   {
@@ -149,6 +207,28 @@
     ]
   },
   {
+    "name": "Jefry Edinson Ramos Castillo",
+    "nickname": "jefrabit",
+    "github": "https://github.com/jefrabit",
+    "instagram": "https://www.instagram.com/jefry_ramos.26/",
+    "image": "https://github.com/jefrabit.png",
+    "description": "Estudiante de Ingeniería de Sistemas en la UNA Puno",
+    "hobbies": [
+      "Voley",
+      "Juegos"
+    ]
+  },
+  {
+    "name": "Joel Mallea",
+    "nickname": "JoelMallea",
+    "github": "https://github.com/JoelMallea",
+    "image": "https://github.com/JoelMallea.png",
+    "description": "desarrollador web",
+    "hobbies": [
+      "programacion"
+    ]
+  },
+  {
     "name": "Miguel Casas",
     "nickname": "Miguel546",
     "github": "https://github.com/Miguel546",
@@ -189,6 +269,17 @@
     ]
   },
   {
+    "name": "Aaron Roger Vilca Cari",
+    "nickname": "rogervc1",
+    "github": "https://github.com/rogervc1",
+    "image": "https://github.com/rogervc1.png",
+    "description": "soy aaron",
+    "hobbies": [
+      "programar",
+      "escuchar musica"
+    ]
+  },
+  {
     "name": "ronald Prueba",
     "nickname": "RonPrueba",
     "github": "https://github.com/rvargasc-hub",
@@ -201,6 +292,17 @@
       "C++",
       "Gaming",
       "Futbol"
+    ]
+  },
+  {
+    "name": "Joel Sander Pele Mamani Llanos",
+    "nickname": "sanderelpro22-ctrl",
+    "github": "https://github.com/sanderelpro22-ctrl",
+    "image": "https://github.com/sanderelpro22-ctrl.png",
+    "description": "Estudiando masomenos",
+    "hobbies": [
+      "Dormir",
+      "Gaming"
     ]
   }
 ]
