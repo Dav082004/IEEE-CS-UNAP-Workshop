@@ -68,6 +68,21 @@
     ]
   },
   {
+    "name": "Edgar Avila",
+    "nickname": "Edgar-Avila",
+    "github": "https://github.com/Edgar-Avila",
+    "linkedin": "https://www.linkedin.com/in/edgar-avila-agramonte",
+    "instagram": "https://instagram.com/edgar-avila",
+    "image": "https://api.dicebear.com/9.x/bottts/svg?seed=Edgar",
+    "description": "Full-stack developer apasionado por la tecnología",
+    "hobbies": [
+      "Programación",
+      "Linux",
+      "Musica",
+      "Dibujo"
+    ]
+  },
+  {
     "name": "Gianmarco Guerrero Menacho",
     "nickname": "giansecurai",
     "github": "https://github.com/giansecurai",
