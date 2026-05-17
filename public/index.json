@@ -68,5 +68,18 @@
       "Hobby3",
       "Hobby4"
     ]
+  },
+  {
+    "name": "Nayeli V",
+    "nickname": "nayy123",
+    "github": "https://github.com/nayy123",
+    "linkedin": "https://www.linkedin.com/in/nayeli-villanueva/",
+    "instagram": "https://www.instagram.com/nay23",
+    "image": "https://github.com/nayy123.png",
+    "description": "Hola;) soy Nay",
+    "hobbies": [
+      "Games",
+      "Dev"
+    ]
   }
 ]
