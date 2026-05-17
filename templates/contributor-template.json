@@ -1,10 +1,12 @@
 {
-  "name": "María González",
-  "nickname": "mariagonzalez",
-  "github": "https://github.com/mariagonzalez",
-  "linkedin": "https://linkedin.com/in/maria-gonzalez-dev", 
-  "instagram": "https://instagram.com/maria.codes",
-  "image": "https://github.com/mariagonzalez.png", 
-  "description": "Full-stack developer apasionada por JavaScript y React",
-  "hobbies": ["Programación", "Open Source", "Gaming", "Fotografía"]
+  "name": "Jefry Edinson Ramos Castillo",
+  "nickname": "jefrabit",
+  "github": "https://github.com/jefrabit",
+  "instagram": "https://www.instagram.com/jefry_ramos.26/",
+  "image": "https://github.com/jefrabit.png",
+  "description": "Estudiante de Ingeniería de Sistemas en la UNA Puno",
+  "hobbies": [
+    "Voley",
+    "Juegos"
+  ]
 }
